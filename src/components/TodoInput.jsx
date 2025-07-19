@@ -1,5 +1,5 @@
 export default function TodoInput(props) {
-  const { handleAddTodos, todoValue, setTodoValue } = props;
+  const { handleAddTodos, todoValue, setTodoValue, isEditing } = props;
   return (
     <header>
       <input
@@ -19,7 +19,7 @@ export default function TodoInput(props) {
           setTodoValue("");
         }}
       >
-        Add
+        {isEditing ? "Update" : "Add"}
       </button>
     </header>
   );

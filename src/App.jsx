@@ -5,17 +5,20 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 function App() {
   const [todos, setTodos] = useState([]);
-  const [todoValue, setTodoValue] = useState('');
-  
+  const [todoValue, setTodoValue] = useState("");
+
   function persistData(newList) {
-    localStorage.setItem('todos', JSON.stringify({todos: newList}))
+    localStorage.setItem("todos", JSON.stringify({ todos: newList }));
   }
+
+  const [isEditing, setIsEditing] = useState(false);
 
   function handleAddTodos(newTodo) {
     if (newTodo !== "") {
       const newTodoList = [...todos, { text: newTodo, completed: false }];
       persistData(newTodoList);
       setTodos(newTodoList);
+      setIsEditing(false);
     }
   }
 
@@ -25,35 +28,35 @@ function App() {
     persistData(newTodoList);
     setTodos(newTodoList);
   }
-  
 
   function handleDeleteTodos(index) {
     const newTodoList = todos.filter((todo, todoIndex) => {
-      return todoIndex !== index
-    })
-    persistData(newTodoList)
+      return todoIndex !== index;
+    });
+    persistData(newTodoList);
 
     setTodos(newTodoList);
   }
 
   function handleEditTodos(index) {
-    const valueToBeEdited = todos[index]
-    setTodoValue(valueToBeEdited)
-    handleDeleteTodos(index)
+    const valueToBeEdited = todos[index].text;
+    setTodoValue(valueToBeEdited);
+    handleDeleteTodos(index);
+    setIsEditing(true);
   }
 
   useEffect(() => {
-    if(!localStorage) {
-      return
+    if (!localStorage) {
+      return;
     }
-    let localTodos = localStorage.getItem('todos');
-    if (!localTodos){
+    let localTodos = localStorage.getItem("todos");
+    if (!localTodos) {
       return;
     }
 
-    localTodos = JSON.parse(localTodos).todos
-    setTodos(localTodos) 
-  }, [])
+    localTodos = JSON.parse(localTodos).todos;
+    setTodos(localTodos);
+  }, []);
   return (
     <>
       <Header />
@@ -62,6 +65,7 @@ function App() {
         todoValue={todoValue}
         setTodoValue={setTodoValue}
         handleAddTodos={handleAddTodos}
+        isEditing={isEditing}
       />
       <TodoList
         handleDeleteTodos={handleDeleteTodos}
