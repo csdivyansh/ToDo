@@ -6,13 +6,35 @@ import Footer from "./components/Footer";
 function App() {
   const [todos, setTodos] = useState([]);
   const [todoValue, setTodoValue] = useState("");
-
+  const [isEditing, setIsEditing] = useState(false);
   function persistData(newList) {
     localStorage.setItem("todos", JSON.stringify({ todos: newList }));
   }
+  useEffect(() => {
+    const today = new Date().toDateString();
+    const lastOpen = localStorage.getItem("lastOpenDate");
+    let localTodos = localStorage.getItem("todos");
+    let todosArray = [];
+    if (localTodos) {
+      todosArray = JSON.parse(localTodos).todos;
+      setTodos(todosArray);
+    }
+    if (lastOpen) {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      if (lastOpen === yesterday.toDateString()) {
+        const newTodoList = todosArray.map((todo) => ({
+          ...todo,
+          completed: false,
+        }));
+        persistData(newTodoList);
+        setTodos(newTodoList);
+      }
+    }
 
-  const [isEditing, setIsEditing] = useState(false);
-
+    localStorage.setItem("lastOpenDate", today);
+  }, []);
+  
   function handleAddTodos(newTodo) {
     if (newTodo !== "") {
       const newTodoList = [...todos, { text: newTodo, completed: false }];
