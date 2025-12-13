@@ -50,10 +50,12 @@ function App() {
           // Backend returned empty, add default todos
           const defaultTodos: Todo[] = [
             { text: "Welcome to csdiv's todos list app", completed: false },
-            { text: "Start making your day productive", completed: false }
+            { text: "Start making your day productive", completed: false },
           ];
           setTodos(defaultTodos);
           persistData(defaultTodos);
+          // Sync default todos to backend
+          updateTodosOnBackend(defaultTodos);
         }
       } else {
         // Backend failed, fallback to localStorage

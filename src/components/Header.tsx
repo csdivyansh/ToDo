@@ -85,7 +85,14 @@ export default function Header({ userName, showWelcome }: HeaderProps) {
   return (
     <header>
       <h1 className={isTyping ? "typing" : ""}>
-        {displayText}
+        {displayText.startsWith("Welcome ") ? (
+          <>
+            <span style={{ color: "aqua" }}>Welcome </span>
+            {displayText.slice(7)}
+          </>
+        ) : (
+          displayText
+        )}
         {isTyping && <span className="cursor">|</span>}
       </h1>
     </header>
