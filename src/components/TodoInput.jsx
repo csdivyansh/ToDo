@@ -10,7 +10,7 @@ export default function TodoInput(props) {
             document.getElementById("add-btn").click();
           }
         }}
-        placeholder="Enter ToDo..."
+        placeholder="Type your tasks here..."
         autoComplete="on"
       />
       <button
