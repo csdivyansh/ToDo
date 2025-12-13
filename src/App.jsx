@@ -7,6 +7,17 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [todoValue, setTodoValue] = useState("");
   const [isEditing, setIsEditing] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem("darkMode");
+    return saved ? JSON.parse(saved) : true;
+  });
+
+  const toggleDarkMode = () => {
+    setDarkMode((prev) => {
+      localStorage.setItem("darkMode", JSON.stringify(!prev));
+      return !prev;
+    });
+  };
   function persistData(newList) {
     localStorage.setItem("todos", JSON.stringify({ todos: newList }));
   }
@@ -33,6 +44,15 @@ function App() {
 
     localStorage.setItem("lastOpenDate", today);
   }, []);
+
+  useEffect(() => {
+    const root = document.getElementById("root");
+    if (darkMode) {
+      root.classList.add("dark-mode");
+    } else {
+      root.classList.remove("dark-mode");
+    }
+  }, [darkMode]);
 
   function handleAddTodos(newTodo) {
     if (newTodo !== "") {
@@ -67,8 +87,8 @@ function App() {
   }
 
   return (
-    <>
-      <Header />
+    <div className={darkMode ? "dark-mode" : ""}>
+      <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
 
       <TodoInput
         todoValue={todoValue}
@@ -83,7 +103,7 @@ function App() {
         todos={todos}
       />
       <Footer />
-    </>
+    </div>
   );
 }
 

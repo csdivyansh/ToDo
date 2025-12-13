@@ -1,7 +1,7 @@
 export default function TodoInput(props) {
   const { handleAddTodos, todoValue, setTodoValue, isEditing } = props;
   return (
-    <header>
+    <div className="input-container">
       <input
         value={todoValue}
         onChange={(e) => setTodoValue(e.target.value)}
@@ -22,6 +22,6 @@ export default function TodoInput(props) {
       >
         {isEditing ? "Update" : "Add"}
       </button>
-    </header>
+    </div>
   );
 }

@@ -1,7 +1,10 @@
-export default function Header() {
+export default function Header({ darkMode, toggleDarkMode }) {
   return (
-    <div>
+    <header>
       <h1>ToDos List</h1>
-    </div>
+      <button onClick={toggleDarkMode} className="dark-mode-toggle">
+        {darkMode ? "☀️" : "🌙"}
+      </button>
+    </header>
   );
 }
