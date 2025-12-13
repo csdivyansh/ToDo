@@ -159,7 +159,7 @@ function App() {
   async function handleAddTodos(newTodo: string): Promise<void> {
     if (newTodo !== "") {
       if (isEditing && editingIndex !== -1) {
-        // Update existing todo
+        // Update existing todo - optimistic update
         const newTodoList = [...todos];
         newTodoList[editingIndex] = {
           ...newTodoList[editingIndex],
@@ -167,91 +167,94 @@ function App() {
         };
         persistData(newTodoList);
         setTodos(newTodoList);
-
-        if (userName) {
-          await updateTodosOnBackend(newTodoList);
-        }
-
         setIsEditing(false);
         setEditingIndex(-1);
-      } else {
-        // Add new todo
-        const newTodoItem: Todo = { text: newTodo, completed: false };
-        try {
-          if (userName) {
-            const response = await fetch(API_BASE_URL, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(newTodoItem),
-            });
 
-            if (response.ok) {
-              const data = await response.json();
-              if (data.todos) {
+        // Sync with backend asynchronously (non-blocking)
+        if (userName) {
+          updateTodosOnBackend(newTodoList);
+        }
+      } else {
+        // Add new todo - optimistic update
+        const newTodoItem: Todo = { text: newTodo, completed: false };
+        const newTodoList: Todo[] = [...todos, newTodoItem];
+
+        // Update locally first (instant UI response)
+        persistData(newTodoList);
+        setTodos(newTodoList);
+        setIsEditing(false);
+
+        // Sync with backend asynchronously (non-blocking)
+        if (userName) {
+          fetch(API_BASE_URL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newTodoItem),
+          })
+            .then((response) => {
+              if (response.ok) {
+                return response.json();
+              }
+              throw new Error("Failed to sync with backend");
+            })
+            .then((data) => {
+              // Optionally update with backend response if it differs
+              if (
+                data.todos &&
+                JSON.stringify(data.todos) !== JSON.stringify(newTodoList)
+              ) {
                 setTodos(data.todos);
                 persistData(data.todos);
               }
-            } else {
-              // Backend request failed, update locally
-              const newTodoList: Todo[] = [...todos, newTodoItem];
-              persistData(newTodoList);
-              setTodos(newTodoList);
-            }
-          } else {
-            // No username yet, just update locally
-            const newTodoList: Todo[] = [...todos, newTodoItem];
-            persistData(newTodoList);
-            setTodos(newTodoList);
-          }
-        } catch (error) {
-          console.error("Error adding todo:", error);
-          // Fallback to local update if backend fails
-          const newTodoList: Todo[] = [...todos, newTodoItem];
-          persistData(newTodoList);
-          setTodos(newTodoList);
+            })
+            .catch((error) => {
+              console.error("Error syncing todo with backend:", error);
+              // Local update already done, so user isn't affected
+            });
         }
-        setIsEditing(false);
       }
     }
   }
 
   async function handleToggleComplete(index: number): Promise<void> {
+    // Optimistic update - toggle locally first
     const newTodoList = [...todos];
     newTodoList[index].completed = !newTodoList[index].completed;
     persistData(newTodoList);
     setTodos(newTodoList);
 
-    if (!userName) return;
-
-    try {
-      await fetch(`${API_BASE_URL}/${index}`, {
+    // Sync with backend asynchronously (non-blocking)
+    if (userName) {
+      fetch(`${API_BASE_URL}/${index}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
+      }).catch((error) => {
+        console.error("Error syncing toggle with backend:", error);
+        // Local update already done, so user isn't affected
       });
-    } catch (error) {
-      console.error("Error toggling todo:", error);
     }
   }
 
   async function handleDeleteTodos(index: number): Promise<void> {
+    // Optimistic update - delete locally first
     const newTodoList = todos.filter((_todo, todoIndex) => {
       return todoIndex !== index;
     });
     persistData(newTodoList);
     setTodos(newTodoList);
 
-    if (!userName) return;
-
-    try {
-      await fetch(`${API_BASE_URL}/${index}`, {
+    // Sync with backend asynchronously (non-blocking)
+    if (userName) {
+      fetch(`${API_BASE_URL}/${index}`, {
         method: "DELETE",
+      }).catch((error) => {
+        console.error("Error syncing deletion with backend:", error);
+        // Local update already done, so user isn't affected
       });
-    } catch (error) {
-      console.error("Error deleting todo:", error);
     }
   }
 
@@ -262,9 +265,10 @@ function App() {
     setEditingIndex(index);
   }
 
-  function handleNameSubmit(name: string): void {
+  function handleNameSubmit(name: string, password: string): void {
     setUserName(name);
     localStorage.setItem("userName", name);
+    localStorage.setItem("userPassword", password);
     setShowModal(false);
     setShowWelcome(true);
 
