@@ -43,7 +43,6 @@ function App() {
       if (response.ok) {
         const data = await response.json();
         if (data.todos && Array.isArray(data.todos) && data.todos.length > 0) {
-          // Backend has todos, use them
           setTodos(data.todos);
           persistData(data.todos);
         } else {
@@ -54,7 +53,6 @@ function App() {
           ];
           setTodos(defaultTodos);
           persistData(defaultTodos);
-          // Sync default todos to backend
           updateTodosOnBackend(defaultTodos);
         }
       } else {
@@ -63,19 +61,16 @@ function App() {
       }
     } catch (error) {
       console.error("Error fetching todos:", error);
-      // Fallback to localStorage if backend is unavailable
       loadLocalTodos();
     }
   }
 
-  // Load todos from localStorage
   function loadLocalTodos(): void {
     const localTodos = localStorage.getItem("todos");
     if (localTodos) {
       const todosArray = JSON.parse(localTodos).todos;
       setTodos(todosArray);
     } else {
-      // Set default todos if none exist
       const defaultTodos: Todo[] = [
         { text: "Welcome to csdiv's todos list app", completed: false },
         { text: "Start making your day productive", completed: false },

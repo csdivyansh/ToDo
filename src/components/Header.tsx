@@ -13,7 +13,7 @@ export default function Header({ userName, showWelcome }: HeaderProps) {
     if (!showWelcome || !userName) return;
 
     const welcomeText = `Welcome ${userName}`;
-    const finalText = "ToDos List";
+    const finalText = "ToDo List";
     let timers: number[] = [];
     let isCancelled = false;
 

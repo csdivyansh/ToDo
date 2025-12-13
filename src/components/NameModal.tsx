@@ -6,11 +6,11 @@ interface NameModalProps {
 
 function NameModal({ onSubmit }: NameModalProps) {
   const [name, setName] = useState<string>("");
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (name.trim()) {
-      onSubmit(name.trim());
+      const firstName = name.trim().split(" ")[0];
+      onSubmit(firstName);
     }
   };
 
