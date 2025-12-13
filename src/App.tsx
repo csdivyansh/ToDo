@@ -3,6 +3,7 @@ import TodoInput from "./components/TodoInput";
 import TodoList from "./components/TodoList";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import NameModal from "./components/NameModal";
 
 interface Todo {
   text: string;
@@ -13,6 +14,15 @@ function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [todoValue, setTodoValue] = useState<string>("");
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [userName, setUserName] = useState<string>(() => {
+    const saved = localStorage.getItem("userName");
+    return saved || "";
+  });
+  const [showModal, setShowModal] = useState<boolean>(() => {
+    const saved = localStorage.getItem("userName");
+    return !saved;
+  });
+  const [showWelcome, setShowWelcome] = useState<boolean>(false);
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     const saved = localStorage.getItem("darkMode");
     return saved ? JSON.parse(saved) : true;
@@ -107,9 +117,22 @@ function App() {
     setIsEditing(true);
   }
 
+  function handleNameSubmit(name: string): void {
+    setUserName(name);
+    localStorage.setItem("userName", name);
+    setShowModal(false);
+    setShowWelcome(true);
+  }
+
   return (
     <div className={darkMode ? "dark-mode" : ""}>
-      <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+      {showModal && <NameModal onSubmit={handleNameSubmit} />}
+      <Header
+        darkMode={darkMode}
+        toggleDarkMode={toggleDarkMode}
+        userName={userName}
+        showWelcome={showWelcome}
+      />
 
       <TodoInput
         todoValue={todoValue}
