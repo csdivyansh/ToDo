@@ -3,7 +3,7 @@ export default function Header({ darkMode, toggleDarkMode }) {
     <header>
       <h1>ToDos List</h1>
       <button onClick={toggleDarkMode} className="dark-mode-toggle">
-        {darkMode ? "☀️" : "🌙"}
+        {darkMode ? "☀️" : "🌛"}
       </button>
     </header>
   );
