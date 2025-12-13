@@ -93,7 +93,7 @@ function App() {
   }
 
   function handleDeleteTodos(index: number): void {
-    const newTodoList = todos.filter((todo, todoIndex) => {
+    const newTodoList = todos.filter((_todo, todoIndex) => {
       return todoIndex !== index;
     });
     persistData(newTodoList);
