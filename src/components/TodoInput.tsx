@@ -1,5 +1,16 @@
-export default function TodoInput(props) {
-  const { handleAddTodos, todoValue, setTodoValue, isEditing } = props;
+interface TodoInputProps {
+  todoValue: string;
+  setTodoValue: (value: string) => void;
+  handleAddTodos: (todo: string) => void;
+  isEditing: boolean;
+}
+
+export default function TodoInput({
+  handleAddTodos,
+  todoValue,
+  setTodoValue,
+  isEditing,
+}: TodoInputProps) {
   return (
     <div className="input-container">
       <input
@@ -7,7 +18,7 @@ export default function TodoInput(props) {
         onChange={(e) => setTodoValue(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
-            document.getElementById("add-btn").click();
+            document.getElementById("add-btn")?.click();
           }
         }}
         placeholder="Type your tasks here..."

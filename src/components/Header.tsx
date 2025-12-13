@@ -1,4 +1,9 @@
-export default function Header({ darkMode, toggleDarkMode }) {
+interface HeaderProps {
+  darkMode: boolean;
+  toggleDarkMode: () => void;
+}
+
+export default function Header({ darkMode, toggleDarkMode }: HeaderProps) {
   return (
     <header>
       <h1>ToDos List</h1>

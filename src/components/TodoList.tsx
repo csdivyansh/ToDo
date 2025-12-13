@@ -1,9 +1,23 @@
 import TodoCard from "./TodoCard";
 
-export default function TodoList(props) {
-  const { todos, handleDeleteTodos, handleEditTodos, handleToggleComplete } =
-    props;
+interface Todo {
+  text: string;
+  completed: boolean;
+}
 
+interface TodoListProps {
+  todos: Todo[];
+  handleDeleteTodos: (index: number) => void;
+  handleEditTodos: (index: number) => void;
+  handleToggleComplete: (index: number) => void;
+}
+
+export default function TodoList({
+  todos,
+  handleDeleteTodos,
+  handleEditTodos,
+  handleToggleComplete,
+}: TodoListProps) {
   return (
     <ul className="main">
       {todos.map((todo, index) => (
