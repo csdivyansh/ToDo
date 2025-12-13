@@ -30,7 +30,7 @@ function App() {
   // Dark mode is now always enabled
   const darkMode = true;
 
-  const API_BASE_URL = `http://localhost:5000/api/misc/todos/${userName}`;
+  const API_BASE_URL = `https://pingnotes.onrender.com/api/misc/todos/${userName}`;
 
   function persistData(newList: Todo[]): void {
     localStorage.setItem("todos", JSON.stringify({ todos: newList }));
