@@ -15,26 +15,25 @@ function App() {
     const lastOpen = localStorage.getItem("lastOpenDate");
     let localTodos = localStorage.getItem("todos");
     let todosArray = [];
+
     if (localTodos) {
       todosArray = JSON.parse(localTodos).todos;
-      setTodos(todosArray);
-    }
-    if (lastOpen) {
-      const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
-      if (lastOpen === yesterday.toDateString()) {
-        const newTodoList = todosArray.map((todo) => ({
+
+      // Reset completed status if it's a new day
+      if (lastOpen && lastOpen !== today) {
+        todosArray = todosArray.map((todo) => ({
           ...todo,
           completed: false,
         }));
-        persistData(newTodoList);
-        setTodos(newTodoList);
+        persistData(todosArray);
       }
+
+      setTodos(todosArray);
     }
 
     localStorage.setItem("lastOpenDate", today);
   }, []);
-  
+
   function handleAddTodos(newTodo) {
     if (newTodo !== "") {
       const newTodoList = [...todos, { text: newTodo, completed: false }];
@@ -67,18 +66,6 @@ function App() {
     setIsEditing(true);
   }
 
-  useEffect(() => {
-    if (!localStorage) {
-      return;
-    }
-    let localTodos = localStorage.getItem("todos");
-    if (!localTodos) {
-      return;
-    }
-
-    localTodos = JSON.parse(localTodos).todos;
-    setTodos(localTodos);
-  }, []);
   return (
     <>
       <Header />
