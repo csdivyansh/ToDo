@@ -3,6 +3,7 @@ import TodoInput from "./components/TodoInput";
 import TodoList from "./components/TodoList";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+
 function App() {
   const [todos, setTodos] = useState([]);
   const [todoValue, setTodoValue] = useState("");
@@ -29,8 +30,6 @@ function App() {
 
     if (localTodos) {
       todosArray = JSON.parse(localTodos).todos;
-
-      // Reset completed status if it's a new day
       if (lastOpen && lastOpen !== today) {
         todosArray = todosArray.map((todo) => ({
           ...todo,
@@ -38,10 +37,8 @@ function App() {
         }));
         persistData(todosArray);
       }
-
       setTodos(todosArray);
     } else {
-      // Set default todos if no localStorage data
       const defaultTodos = [
         { text: "Welcome to csdiv's todos list app", completed: false },
         { text: "Start making your day productive", completed: false },
