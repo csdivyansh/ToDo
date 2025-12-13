@@ -25,7 +25,13 @@ export default function TodoCard({
       </p>
       <div className="actionsContainer">
         <button onClick={() => handleToggleComplete(index)}>
-          <i className="fa-solid fa-check"></i>
+          <i
+            className={
+              todo.completed
+                ? "fa-solid fa-circle-check"
+                : "fa-regular fa-circle"
+            }
+          ></i>
         </button>
         <button onClick={() => handleEditTodo(index)}>
           <i className="fa-solid fa-pen-to-square"></i>
