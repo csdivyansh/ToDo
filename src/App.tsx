@@ -57,6 +57,19 @@ function App() {
     if (localTodos) {
       const todosArray = JSON.parse(localTodos).todos;
       setTodos(todosArray);
+    } else {
+      // Set default todos if none exist
+      const defaultTodos: Todo[] = [
+        { text: "Welcome to csdiv's todos list app", completed: false },
+        { text: "Start making your day productive", completed: false },
+        { text: "CF", completed: false },
+        { text: "LC", completed: false },
+        { text: "HS", completed: false },
+        { text: "CH", completed: false },
+        { text: "BG", completed: false },
+      ];
+      setTodos(defaultTodos);
+      persistData(defaultTodos);
     }
 
     const today = new Date().toDateString();
