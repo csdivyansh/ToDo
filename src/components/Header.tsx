@@ -1,18 +1,11 @@
 import { useState, useEffect } from "react";
 
 interface HeaderProps {
-  darkMode: boolean;
-  toggleDarkMode: () => void;
   userName?: string;
   showWelcome?: boolean;
 }
 
-export default function Header({
-  darkMode,
-  toggleDarkMode,
-  userName,
-  showWelcome,
-}: HeaderProps) {
+export default function Header({ userName, showWelcome }: HeaderProps) {
   const [displayText, setDisplayText] = useState<string>("ToDos List");
   const [isTyping, setIsTyping] = useState<boolean>(false);
 
@@ -20,7 +13,7 @@ export default function Header({
     if (!showWelcome || !userName) return;
 
     const welcomeText = `Welcome ${userName}`;
-    const finalText = "ToDos List";
+    const finalText = "Your ToDos List";
     let timers: number[] = [];
     let isCancelled = false;
 
@@ -46,7 +39,7 @@ export default function Header({
       step();
     };
 
-    const eraseText = (text: string, speed = 40, onDone?: () => void) => {
+    const eraseText = (text: string, speed = 50, onDone?: () => void) => {
       let i = text.length;
       const step = () => {
         if (i >= 0) {
@@ -95,9 +88,6 @@ export default function Header({
         {displayText}
         {isTyping && <span className="cursor">|</span>}
       </h1>
-      <button onClick={toggleDarkMode} className="dark-mode-toggle">
-        {darkMode ? "☀️" : "🌛"}
-      </button>
     </header>
   );
 }

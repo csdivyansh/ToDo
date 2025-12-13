@@ -7,6 +7,12 @@
   font-weight: 800;
   font-style: normal;
 }
+
+html,
+body {
+  background: #1e1e1e;
+  color: #e8d9c9;
+}
 h1 {
   margin: 2rem 0;
   font-size: 2.5rem;
@@ -36,17 +42,27 @@ h1 .cursor {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #e8d9c9;
+  background: #1e1e1e;
+  color: #e8d9c9;
   gap: 14px;
 }
 header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 20px;
   max-width: 800px;
   width: 80%;
   margin: 2rem auto 0;
+}
+
+h1 {
+  margin: 2rem 0;
+  font-size: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
 }
 
 .input-container {
@@ -64,16 +80,18 @@ header {
   font-size: 1.1rem;
   outline: none;
   padding: 14px 18px;
-  border: none;
-  background: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12), 0 1.5px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #444;
+  background: #2d2d2d;
+  color: #e8d9c9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 1.5px 4px rgba(0, 0, 0, 0.2);
 }
 
 .input-container button {
   border-radius: 14px;
-  background: #ffffff;
+  background: #2d2d2d;
+  color: #e8d9c9;
   padding: 14px 18px;
-  border: none;
+  border: 1px solid #444;
   outline: none;
   font-size: 1.1rem;
   cursor: pointer;
@@ -81,7 +99,7 @@ header {
 }
 
 .input-container button:hover {
-  opacity: 0.7;
+  background: #3d3d3d;
 }
 
 header input {
@@ -104,10 +122,11 @@ header button:hover {
 header button,
 header input {
   padding: 14px 18px;
-  border: none;
+  border: 1px solid #444;
   outline: none;
   font-size: x-large;
-  background: #ffffff;
+  background: #2d2d2d;
+  color: #e8d9c9;
 }
 p {
   font-size: 0.9em;
@@ -129,7 +148,8 @@ p {
   gap: 0.75rem;
   padding: 1rem;
   border-radius: 14px;
-  background: #ffffff;
+  background: #2d2d2d;
+  color: #e8d9c9;
   box-sizing: border-box;
 }
 .todoItem p {
@@ -146,6 +166,7 @@ p {
   transition-duration: 200ms;
   border: none;
   background: transparent;
+  color: #e8d9c9;
   cursor: pointer;
 }
 .actionsContainer button:hover {
@@ -160,8 +181,9 @@ footer {
   bottom: 0;
   left: 0;
   text-align: center;
-  background: #000;
-  color: #fff;
+  background: #0d0d0d;
+  color: #e8d9c9;
+  border-top: 1px solid #444;
 }
 @media (min-width: 640px) {
   header {
@@ -281,12 +303,12 @@ footer {
 }
 
 .modal-content {
-  background: #ffffff;
+  background: #2d2d2d;
   padding: 2.5rem;
   border-radius: 20px;
   max-width: 450px;
   width: 90%;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
   animation: modalSlideIn 0.3s ease-out;
 }
 
@@ -304,12 +326,12 @@ footer {
 .modal-content h2 {
   margin: 0 0 0.5rem 0;
   font-size: 2rem;
-  color: #333;
+  color: #e8d9c9;
 }
 
 .modal-content p {
   margin: 0 0 1.5rem 0;
-  color: #666;
+  color: #b8b8b8;
   font-size: 1.1rem;
   font-weight: 400;
 }
@@ -323,7 +345,9 @@ footer {
 .modal-content input {
   padding: 14px 18px;
   border-radius: 14px;
-  border: 2px solid #e0e0e0;
+  border: 2px solid #444;
+  background: #1e1e1e;
+  color: #e8d9c9;
   font-size: 1.1rem;
   outline: none;
   transition: border-color 0.3s;
@@ -337,8 +361,8 @@ footer {
   padding: 14px 18px;
   border-radius: 14px;
   border: none;
-  background: #333;
-  color: white;
+  background: #e8d9c9;
+  color: #1e1e1e;
   font-size: 1.1rem;
   cursor: pointer;
   transition: all 0.3s;
@@ -346,45 +370,14 @@ footer {
 }
 
 .modal-content button:hover:not(:disabled) {
-  background: #555;
+  background: #f5ebe0;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .modal-content button:disabled {
-  background: #ccc;
+  background: #666;
+  color: #999;
   cursor: not-allowed;
   opacity: 0.6;
-}
-
-/* Dark mode modal styles */
-.dark-mode .modal-content {
-  background: #2d2d2d;
-}
-
-.dark-mode .modal-content h2 {
-  color: #e8d9c9;
-}
-
-.dark-mode .modal-content p {
-  color: #b8b8b8;
-}
-
-.dark-mode .modal-content input {
-  background: #1e1e1e;
-  color: #e8d9c9;
-  border-color: #444;
-}
-
-.dark-mode .modal-content input:focus {
-  border-color: #666;
-}
-
-.dark-mode .modal-content button:not(:disabled) {
-  background: #e8d9c9;
-  color: #1e1e1e;
-}
-
-.dark-mode .modal-content button:hover:not(:disabled) {
-  background: #f5ebe0;
 }

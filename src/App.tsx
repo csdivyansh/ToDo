@@ -22,18 +22,12 @@ function App() {
     const saved = localStorage.getItem("userName");
     return !saved;
   });
-  const [showWelcome, setShowWelcome] = useState<boolean>(false);
-  const [darkMode, setDarkMode] = useState<boolean>(() => {
-    const saved = localStorage.getItem("darkMode");
-    return saved ? JSON.parse(saved) : true;
+  const [showWelcome, setShowWelcome] = useState<boolean>(() => {
+    const saved = localStorage.getItem("userName");
+    return !!saved; // Show welcome animation if username exists
   });
-
-  const toggleDarkMode = (): void => {
-    setDarkMode((prev) => {
-      localStorage.setItem("darkMode", JSON.stringify(!prev));
-      return !prev;
-    });
-  };
+  // Dark mode is now always enabled
+  const darkMode = true;
 
   function persistData(newList: Todo[]): void {
     localStorage.setItem("todos", JSON.stringify({ todos: newList }));
@@ -127,12 +121,7 @@ function App() {
   return (
     <div className={darkMode ? "dark-mode" : ""}>
       {showModal && <NameModal onSubmit={handleNameSubmit} />}
-      <Header
-        darkMode={darkMode}
-        toggleDarkMode={toggleDarkMode}
-        userName={userName}
-        showWelcome={showWelcome}
-      />
+      <Header userName={userName} showWelcome={showWelcome} />
 
       <TodoInput
         todoValue={todoValue}
