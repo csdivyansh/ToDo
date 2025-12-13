@@ -58,7 +58,7 @@ export default function Header({ userName, showWelcome }: HeaderProps) {
       typeText(welcomeText, 50, () => {
         // Pause, then erase welcome
         schedule(() => {
-          eraseText(welcomeText, 30, () => {
+          eraseText(welcomeText, 40, () => {
             // Small pause, then type final title
             schedule(() => {
               typeText(finalText, 70, () => {
