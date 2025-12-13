@@ -21,46 +21,72 @@ export default function Header({
 
     const welcomeText = `Welcome ${userName}`;
     const finalText = "ToDos List";
-    let currentIndex = 0;
-    let isErasing = false;
-    let currentText = "";
-    setIsTyping(true);
-    const typeWriter = setInterval(() => {
-      if (!isErasing) {
-        if (currentIndex < welcomeText.length) {
-          currentText = welcomeText.substring(0, currentIndex + 1);
-          setDisplayText(currentText);
-          currentIndex++;
-        } else {
-          setTimeout(() => {
-            isErasing = true;
-            currentIndex = welcomeText.length;
-          }, 1500);
-        }
-      } else {
-        if (currentIndex > 0) {
-          currentText = welcomeText.substring(0, currentIndex - 1);
-          setDisplayText(currentText);
-          currentIndex--;
-        } else {
-          clearInterval(typeWriter);
-          setTimeout(() => {
-            let finalIndex = 0;
-            const typeFinal = setInterval(() => {
-              if (finalIndex < finalText.length) {
-                setDisplayText(finalText.substring(0, finalIndex + 1));
-                finalIndex++;
-              } else {
-                clearInterval(typeFinal);
-                setIsTyping(false);
-              }
-            }, 80);
-          }, 300);
-        }
-      }
-    }, 100);
+    let timers: number[] = [];
+    let isCancelled = false;
 
-    return () => clearInterval(typeWriter);
+    const schedule = (fn: () => void, delay: number) => {
+      const id = window.setTimeout(() => {
+        if (!isCancelled) fn();
+      }, delay);
+      timers.push(id);
+    };
+
+    const typeText = (text: string, speed = 60, onDone?: () => void) => {
+      setIsTyping(true);
+      let i = 0;
+      const step = () => {
+        if (i <= text.length) {
+          setDisplayText(text.slice(0, i));
+          i++;
+          schedule(step, speed);
+        } else if (onDone) {
+          onDone();
+        }
+      };
+      step();
+    };
+
+    const eraseText = (text: string, speed = 40, onDone?: () => void) => {
+      let i = text.length;
+      const step = () => {
+        if (i >= 0) {
+          setDisplayText(text.slice(0, i));
+          i--;
+          schedule(step, speed);
+        } else if (onDone) {
+          onDone();
+        }
+      };
+      step();
+    };
+
+    const runCycle = () => {
+      // Type welcome
+      typeText(welcomeText, 50, () => {
+        // Pause, then erase welcome
+        schedule(() => {
+          eraseText(welcomeText, 30, () => {
+            // Small pause, then type final title
+            schedule(() => {
+              typeText(finalText, 70, () => {
+                // Pause on final text, then loop again after 5s
+                schedule(() => {
+                  setIsTyping(false);
+                  runCycle();
+                }, 5000);
+              });
+            }, 200);
+          });
+        }, 900);
+      });
+    };
+
+    runCycle();
+
+    return () => {
+      isCancelled = true;
+      timers.forEach((id) => clearTimeout(id));
+    };
   }, [showWelcome, userName]);
 
   return (
