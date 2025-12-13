@@ -79,11 +79,6 @@ function App() {
       const defaultTodos: Todo[] = [
         { text: "Welcome to csdiv's todos list app", completed: false },
         { text: "Start making your day productive", completed: false },
-        { text: "CF", completed: false },
-        { text: "LC", completed: false },
-        { text: "HS", completed: false },
-        { text: "CH", completed: false },
-        { text: "BG", completed: false },
       ];
       setTodos(defaultTodos);
       persistData(defaultTodos);
