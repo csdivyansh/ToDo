@@ -30,10 +30,56 @@ function App() {
   // Dark mode is now always enabled
   const darkMode = true;
 
-  const API_BASE_URL = `http://localhost:5000/api/misc/todos/${userName}`;
+  const API_BASE_URL = `https://pingnotes.onrender.com/api/misc/todos/${userName}`;
 
   function persistData(newList: Todo[]): void {
     localStorage.setItem("todos", JSON.stringify({ todos: newList }));
+  }
+
+  // Fetch todos from backend
+  async function fetchTodos(): Promise<void> {
+    try {
+      const response = await fetch(API_BASE_URL);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.todos && Array.isArray(data.todos) && data.todos.length > 0) {
+          setTodos(data.todos);
+          persistData(data.todos);
+        } else {
+          // If backend returns empty, load from localStorage or defaults
+          loadLocalTodos();
+        }
+      } else {
+        // If backend fails, load from localStorage
+        loadLocalTodos();
+      }
+    } catch (error) {
+      console.error("Error fetching todos:", error);
+      // Fallback to localStorage if backend is unavailable
+      loadLocalTodos();
+    }
+  }
+
+  // Load todos from localStorage
+  function loadLocalTodos(): void {
+    const localTodos = localStorage.getItem("todos");
+    if (localTodos) {
+      const todosArray = JSON.parse(localTodos).todos;
+      setTodos(todosArray);
+    } else {
+      // Set default todos if none exist
+      const defaultTodos: Todo[] = [
+        { text: "Welcome to csdiv's todos list app", completed: false },
+        { text: "Start making your day productive", completed: false },
+        { text: "CF", completed: false },
+        { text: "LC", completed: false },
+        { text: "HS", completed: false },
+        { text: "CH", completed: false },
+        { text: "BG", completed: false },
+      ];
+      setTodos(defaultTodos);
+      persistData(defaultTodos);
+    }
   }
 
   // Update all todos on backend
@@ -52,41 +98,31 @@ function App() {
   }
 
   useEffect(() => {
-    // Load todos from localStorage on mount
-    const localTodos = localStorage.getItem("todos");
+    // Fetch todos from backend on mount and refresh
+    fetchTodos();
+
     const today = new Date().toDateString();
     const lastOpen = localStorage.getItem("lastOpenDate");
-
-    if (localTodos) {
-      let todosArray = JSON.parse(localTodos).todos;
-
-      // Reset completed todos if it's a new day
-      if (lastOpen && lastOpen !== today) {
-        todosArray = todosArray.map((todo: Todo) => ({
-          ...todo,
-          completed: false,
-        }));
-        persistData(todosArray);
-        updateTodosOnBackend(todosArray);
-      }
-
-      setTodos(todosArray);
-    } else {
-      // Set default todos if none exist
-      const defaultTodos: Todo[] = [
-        { text: "Welcome to csdiv's todos list app", completed: false },
-        { text: "Start making your day productive", completed: false },
-        { text: "CF", completed: false },
-        { text: "LC", completed: false },
-        { text: "HS", completed: false },
-        { text: "CH", completed: false },
-        { text: "BG", completed: false },
-      ];
-      setTodos(defaultTodos);
-      persistData(defaultTodos);
-    }
-
     localStorage.setItem("lastOpenDate", today);
+
+    // Reset completed todos if it's a new day
+    if (lastOpen && lastOpen !== today) {
+      // This will be handled after todos are loaded
+      setTimeout(() => {
+        setTodos((prevTodos) => {
+          if (prevTodos.length > 0) {
+            const updatedTodos = prevTodos.map((todo) => ({
+              ...todo,
+              completed: false,
+            }));
+            persistData(updatedTodos);
+            updateTodosOnBackend(updatedTodos);
+            return updatedTodos;
+          }
+          return prevTodos;
+        });
+      }, 100);
+    }
   }, []);
 
   useEffect(() => {
