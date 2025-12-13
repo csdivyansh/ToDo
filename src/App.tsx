@@ -38,6 +38,8 @@ function App() {
 
   // Fetch todos from backend
   async function fetchTodos(): Promise<void> {
+    if (!userName) return; // Don't fetch if no username
+
     try {
       const response = await fetch(API_BASE_URL);
       if (response.ok) {
@@ -46,14 +48,23 @@ function App() {
           setTodos(data.todos);
           persistData(data.todos);
         } else {
-          // Backend returned empty, add default todos
-          const defaultTodos: Todo[] = [
-            { text: "Welcome to csdiv's todos list app", completed: false },
-            { text: "Start making your day productive", completed: false },
-          ];
-          setTodos(defaultTodos);
-          persistData(defaultTodos);
-          updateTodosOnBackend(defaultTodos);
+          // Backend returned empty, check localStorage first
+          const localTodos = localStorage.getItem("todos");
+          if (localTodos) {
+            const todosArray = JSON.parse(localTodos).todos;
+            setTodos(todosArray);
+            // Sync local todos to backend with new username
+            updateTodosOnBackend(todosArray);
+          } else {
+            // No local todos either, add default todos
+            const defaultTodos: Todo[] = [
+              { text: "Welcome to csdiv's todos list app", completed: false },
+              { text: "Start making your day productive", completed: false },
+            ];
+            setTodos(defaultTodos);
+            persistData(defaultTodos);
+            updateTodosOnBackend(defaultTodos);
+          }
         }
       } else {
         // Backend failed, fallback to localStorage
@@ -82,6 +93,8 @@ function App() {
 
   // Update all todos on backend
   async function updateTodosOnBackend(newList: Todo[]): Promise<void> {
+    if (!userName) return; // Don't update if no username
+
     try {
       await fetch(API_BASE_URL, {
         method: "PUT",
@@ -96,17 +109,20 @@ function App() {
   }
 
   useEffect(() => {
-    // Fetch todos from backend on mount and refresh
-    fetchTodos();
+    const loadTodos = async () => {
+      if (userName) {
+        // Only fetch todos if username exists
+        await fetchTodos();
+      } else {
+        // Load from localStorage if no username yet
+        loadLocalTodos();
+      }
 
-    const today = new Date().toDateString();
-    const lastOpen = localStorage.getItem("lastOpenDate");
-    localStorage.setItem("lastOpenDate", today);
+      // Handle daily reset after todos are loaded
+      const today = new Date().toDateString();
+      const lastOpen = localStorage.getItem("lastOpenDate");
 
-    // Reset completed todos if it's a new day
-    if (lastOpen && lastOpen !== today) {
-      // This will be handled after todos are loaded
-      setTimeout(() => {
+      if (lastOpen && lastOpen !== today) {
         setTodos((prevTodos) => {
           if (prevTodos.length > 0) {
             const updatedTodos = prevTodos.map((todo) => ({
@@ -114,14 +130,20 @@ function App() {
               completed: false,
             }));
             persistData(updatedTodos);
-            updateTodosOnBackend(updatedTodos);
+            if (userName) {
+              updateTodosOnBackend(updatedTodos);
+            }
             return updatedTodos;
           }
           return prevTodos;
         });
-      }, 100);
-    }
-  }, []);
+      }
+
+      localStorage.setItem("lastOpenDate", today);
+    };
+
+    loadTodos();
+  }, [userName]); // Re-run when userName changes
 
   useEffect(() => {
     const root = document.getElementById("root");
@@ -145,27 +167,43 @@ function App() {
         };
         persistData(newTodoList);
         setTodos(newTodoList);
-        await updateTodosOnBackend(newTodoList);
+
+        if (userName) {
+          await updateTodosOnBackend(newTodoList);
+        }
+
         setIsEditing(false);
         setEditingIndex(-1);
       } else {
         // Add new todo
         const newTodoItem: Todo = { text: newTodo, completed: false };
         try {
-          const response = await fetch(API_BASE_URL, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(newTodoItem),
-          });
+          if (userName) {
+            const response = await fetch(API_BASE_URL, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(newTodoItem),
+            });
 
-          if (response.ok) {
-            const data = await response.json();
-            if (data.todos) {
-              setTodos(data.todos);
-              persistData(data.todos);
+            if (response.ok) {
+              const data = await response.json();
+              if (data.todos) {
+                setTodos(data.todos);
+                persistData(data.todos);
+              }
+            } else {
+              // Backend request failed, update locally
+              const newTodoList: Todo[] = [...todos, newTodoItem];
+              persistData(newTodoList);
+              setTodos(newTodoList);
             }
+          } else {
+            // No username yet, just update locally
+            const newTodoList: Todo[] = [...todos, newTodoItem];
+            persistData(newTodoList);
+            setTodos(newTodoList);
           }
         } catch (error) {
           console.error("Error adding todo:", error);
@@ -185,6 +223,8 @@ function App() {
     persistData(newTodoList);
     setTodos(newTodoList);
 
+    if (!userName) return;
+
     try {
       await fetch(`${API_BASE_URL}/${index}`, {
         method: "PATCH",
@@ -203,6 +243,8 @@ function App() {
     });
     persistData(newTodoList);
     setTodos(newTodoList);
+
+    if (!userName) return;
 
     try {
       await fetch(`${API_BASE_URL}/${index}`, {
@@ -225,6 +267,18 @@ function App() {
     localStorage.setItem("userName", name);
     setShowModal(false);
     setShowWelcome(true);
+
+    // Sync existing todos to backend with new username
+    if (todos.length > 0) {
+      const API_URL = `https://pingnotes.onrender.com/api/misc/todos/${name}`;
+      fetch(API_URL, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ todos }),
+      }).catch((error) => console.error("Error syncing todos:", error));
+    }
   }
 
   return (
