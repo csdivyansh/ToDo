@@ -36,7 +36,6 @@ function App() {
     localStorage.setItem("todos", JSON.stringify({ todos: newList }));
   }
 
-
   // Update all todos on backend
   async function updateTodosOnBackend(newList: Todo[]): Promise<void> {
     try {
@@ -53,16 +52,21 @@ function App() {
   }
 
   useEffect(() => {
-    // Fetch todos from backend on mount and refresh
-    // fetchTodos();
+    // Load todos from localStorage on mount
+    const localTodos = localStorage.getItem("todos");
+    if (localTodos) {
+      const todosArray = JSON.parse(localTodos).todos;
+      setTodos(todosArray);
+    }
 
     const today = new Date().toDateString();
     const lastOpen = localStorage.getItem("lastOpenDate");
     localStorage.setItem("lastOpenDate", today);
 
     // Reset completed todos if it's a new day
-    if (lastOpen && lastOpen !== today) {
-      const updatedTodos = todos.map((todo) => ({
+    if (lastOpen && lastOpen !== today && localTodos) {
+      const todosArray = JSON.parse(localTodos).todos;
+      const updatedTodos = todosArray.map((todo: Todo) => ({
         ...todo,
         completed: false,
       }));
