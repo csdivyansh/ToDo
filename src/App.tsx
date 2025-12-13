@@ -54,8 +54,22 @@ function App() {
   useEffect(() => {
     // Load todos from localStorage on mount
     const localTodos = localStorage.getItem("todos");
+    const today = new Date().toDateString();
+    const lastOpen = localStorage.getItem("lastOpenDate");
+
     if (localTodos) {
-      const todosArray = JSON.parse(localTodos).todos;
+      let todosArray = JSON.parse(localTodos).todos;
+
+      // Reset completed todos if it's a new day
+      if (lastOpen && lastOpen !== today) {
+        todosArray = todosArray.map((todo: Todo) => ({
+          ...todo,
+          completed: false,
+        }));
+        persistData(todosArray);
+        updateTodosOnBackend(todosArray);
+      }
+
       setTodos(todosArray);
     } else {
       // Set default todos if none exist
@@ -72,21 +86,7 @@ function App() {
       persistData(defaultTodos);
     }
 
-    const today = new Date().toDateString();
-    const lastOpen = localStorage.getItem("lastOpenDate");
     localStorage.setItem("lastOpenDate", today);
-
-    // Reset completed todos if it's a new day
-    if (lastOpen && lastOpen !== today && localTodos) {
-      const todosArray = JSON.parse(localTodos).todos;
-      const updatedTodos = todosArray.map((todo: Todo) => ({
-        ...todo,
-        completed: false,
-      }));
-      setTodos(updatedTodos);
-      persistData(updatedTodos);
-      updateTodosOnBackend(updatedTodos);
-    }
   }, []);
 
   useEffect(() => {
