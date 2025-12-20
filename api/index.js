@@ -52,7 +52,10 @@ const connectDB = async () => {
   }
 
   try {
-    const db = await mongoose.connect(process.env.MONGODB_URI);
+    const db = await mongoose.connect(process.env.MONGODB_URI, {
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    });
     cachedDb = db;
     console.log("MongoDB connected successfully");
     return db;
@@ -90,6 +93,14 @@ export default async function handler(req, res) {
 
   try {
     await connectDB();
+
+    // Strip /api prefix if present for Express routing
+    const originalUrl = req.url;
+    if (req.url.startsWith("/api")) {
+      req.url = req.url.replace("/api", "");
+      if (req.url === "") req.url = "/";
+    }
+
     return app(req, res);
   } catch (error) {
     console.error("Handler error:", error);
