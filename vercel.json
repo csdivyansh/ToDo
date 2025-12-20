@@ -1,17 +1,10 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    }
-  ],
+  "buildCommand": "npm run install:all && cd frontend && npm run build",
+  "outputDirectory": "frontend/dist",
   "rewrites": [
     {
-      "source": "/api/misc/(.*)",
+      "source": "/api/(.*)",
       "destination": "/api"
     }
   ],

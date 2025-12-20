@@ -14,7 +14,7 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use("/api/misc", todoRoutes);
+app.use("/api", todoRoutes);
 
 // Health check
 app.get("/", (req, res) => {

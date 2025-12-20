@@ -9,8 +9,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Routes - mount with /misc prefix to match frontend calls
-app.use("/misc", todoRoutes);
+// Routes - mount at root
+app.use("/", todoRoutes);
 
 // MongoDB connection with caching
 let cachedDb = null;

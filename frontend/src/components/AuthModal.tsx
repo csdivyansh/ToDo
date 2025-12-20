@@ -185,68 +185,134 @@ function AuthModal({ onAuthSuccess }: AuthModalProps) {
             : "Login to access your todos"}
         </p>
         <form onSubmit={handleSubmit}>
-          <div style={{ position: "relative" }}>
+          {mode === "signup" ? (
+            <div
+              style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}
+            >
+              <div style={{ position: "relative", flex: 1 }}>
+                <input
+                  type="text"
+                  name="username"
+                  value={userName}
+                  onChange={handleUserNameChange}
+                  placeholder="Username"
+                  autoFocus
+                  maxLength={20}
+                  disabled={isLoading}
+                  autoComplete={mode === "signup" ? "off" : "username"}
+                  style={{
+                    borderColor:
+                      mode === "signup" && isAvailable === true
+                        ? "#4caf50"
+                        : mode === "signup" && isAvailable === false
+                        ? "#f44336"
+                        : "",
+                    paddingRight:
+                      mode === "signup" && (isChecking || isAvailable !== null)
+                        ? "40px"
+                        : "",
+                  }}
+                />
+                {mode === "signup" && isChecking && (
+                  <span
+                    style={{
+                      position: "absolute",
+                      right: "15px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      fontSize: "12px",
+                      color: "#999",
+                      pointerEvents: "none",
+                    }}
+                  >
+                    Checking...
+                  </span>
+                )}
+                {mode === "signup" && !isChecking && isAvailable === true && (
+                  <span
+                    style={{
+                      position: "absolute",
+                      right: "15px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      fontSize: "20px",
+                      color: "#4caf50",
+                      fontWeight: "bold",
+                      pointerEvents: "none",
+                    }}
+                  >
+                    ✓
+                  </span>
+                )}
+                {mode === "signup" && !isChecking && isAvailable === false && (
+                  <span
+                    style={{
+                      position: "absolute",
+                      right: "15px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      fontSize: "20px",
+                      color: "#f44336",
+                      fontWeight: "bold",
+                      pointerEvents: "none",
+                    }}
+                  >
+                    ✗
+                  </span>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() => checkUsernameAvailability(userName.trim())}
+                disabled={isLoading || isChecking || userName.trim().length < 3}
+                style={{
+                  borderRadius: "14px",
+                  background: "#2d2d2d",
+                  color: "#e8d9c9",
+                  padding: "14px 18px",
+                  border: "1px solid #444",
+                  outline: "none",
+                  fontSize: "1.1rem",
+                  cursor:
+                    userName.trim().length >= 3 && !isLoading && !isChecking
+                      ? "pointer"
+                      : "not-allowed",
+                  transition: "background 200ms",
+                  opacity:
+                    userName.trim().length >= 3 && !isLoading && !isChecking
+                      ? 1
+                      : 0.5,
+                  minWidth: "fit-content",
+                }}
+                onMouseEnter={(e) => {
+                  if (
+                    userName.trim().length >= 3 &&
+                    !isLoading &&
+                    !isChecking
+                  ) {
+                    e.currentTarget.style.background = "#3d3d3d";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "#2d2d2d";
+                }}
+              >
+                Check
+              </button>
+            </div>
+          ) : (
             <input
               type="text"
+              name="username"
               value={userName}
               onChange={handleUserNameChange}
-              onBlur={handleBlur}
               placeholder="Username"
               autoFocus
               maxLength={20}
               disabled={isLoading}
-              style={{
-                borderColor:
-                  mode === "signup" && isAvailable === true
-                    ? "#4caf50"
-                    : mode === "signup" && isAvailable === false
-                    ? "#f44336"
-                    : "",
-              }}
+              autoComplete="username"
             />
-            {mode === "signup" && isChecking && (
-              <span
-                style={{
-                  position: "absolute",
-                  right: "10px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  fontSize: "12px",
-                  color: "#666",
-                }}
-              >
-                Checking...
-              </span>
-            )}
-            {mode === "signup" && !isChecking && isAvailable === true && (
-              <span
-                style={{
-                  position: "absolute",
-                  right: "10px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  fontSize: "18px",
-                  color: "#4caf50",
-                }}
-              >
-                ✓
-              </span>
-            )}
-            {mode === "signup" && !isChecking && isAvailable === false && (
-              <span
-                style={{
-                  position: "absolute",
-                  right: "10px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  fontSize: "18px",
-                  color: "#f44336",
-                }}
-              >
-                ✗
-              </span>
-            )}
-          </div>
+          )}
 
           {mode === "signup" && (
             <input
@@ -256,15 +322,20 @@ function AuthModal({ onAuthSuccess }: AuthModalProps) {
               placeholder="Full Name"
               maxLength={50}
               disabled={isLoading}
+              autoComplete="off"
             />
           )}
 
           <input
             type="password"
+            name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
             disabled={isLoading}
+            autoComplete={
+              mode === "signup" ? "new-password" : "current-password"
+            }
           />
 
           {error && (

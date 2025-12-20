@@ -4,10 +4,10 @@ const isProduction = import.meta.env.PROD;
 
 // For Vercel deployment, use relative path in production
 export const API_BASE_URL = isDevelopment
-  ? "http://localhost:5000/api/misc"
+  ? "http://localhost:5000/api"
   : isProduction && typeof window !== "undefined"
-  ? `${window.location.origin}/api/misc`
-  : "https://pingnotes.onrender.com/api/misc";
+  ? `${window.location.origin}/api`
+  : "https://pingnotes.onrender.com/api";
 
 export const API_ENDPOINTS = {
   // Auth endpoints

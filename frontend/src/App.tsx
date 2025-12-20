@@ -324,6 +324,30 @@ function App() {
   return (
     <div className={darkMode ? "dark-mode" : ""}>
       {showModal && <AuthModal onAuthSuccess={handleAuthSuccess} />}
+      {userName && (
+        <button
+          onClick={handleLogout}
+          style={{
+            position: "fixed",
+            top: "20px",
+            right: "20px",
+            borderRadius: "14px",
+            background: "#2d2d2d",
+            color: "#e8d9c9",
+            padding: "14px 18px",
+            border: "1px solid #444",
+            outline: "none",
+            fontSize: "1.1rem",
+            cursor: "pointer",
+            transition: "background 200ms",
+            zIndex: 1000,
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = "#3d3d3d")}
+          onMouseLeave={(e) => (e.currentTarget.style.background = "#2d2d2d")}
+        >
+          Logout
+        </button>
+      )}
       <Header userName={userFullName || userName} showWelcome={showWelcome} />
 
       <TodoInput
