@@ -3,7 +3,8 @@ import TodoInput from "./components/TodoInput";
 import TodoList from "./components/TodoList";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import NameModal from "./components/NameModal";
+import AuthModal from "./components/AuthModal";
+import { API_ENDPOINTS } from "./config/api";
 
 interface Todo {
   text: string;
@@ -19,18 +20,24 @@ function App() {
     const saved = localStorage.getItem("userName");
     return saved || "";
   });
+  const [userFullName, setUserFullName] = useState<string>(() => {
+    const saved = localStorage.getItem("userFullName");
+    return saved || "";
+  });
+  const [authToken, setAuthToken] = useState<string>(() => {
+    const saved = localStorage.getItem("authToken");
+    return saved || "";
+  });
   const [showModal, setShowModal] = useState<boolean>(() => {
-    const saved = localStorage.getItem("userName");
+    const saved = localStorage.getItem("authToken");
     return !saved;
   });
   const [showWelcome, setShowWelcome] = useState<boolean>(() => {
-    const saved = localStorage.getItem("userName");
-    return !!saved; // Show welcome animation if username exists
+    const saved = localStorage.getItem("authToken");
+    return !!saved; // Show welcome animation if authenticated
   });
   // Dark mode is now always enabled
   const darkMode = true;
-
-  const API_BASE_URL = `https://pingnotes.onrender.com/api/misc/todos/${userName}`;
 
   function persistData(newList: Todo[]): void {
     localStorage.setItem("todos", JSON.stringify({ todos: newList }));
@@ -41,7 +48,7 @@ function App() {
     if (!userName) return; // Don't fetch if no username
 
     try {
-      const response = await fetch(API_BASE_URL);
+      const response = await fetch(API_ENDPOINTS.todos(userName));
       if (response.ok) {
         const data = await response.json();
         if (data.todos && Array.isArray(data.todos) && data.todos.length > 0) {
@@ -96,7 +103,7 @@ function App() {
     if (!userName) return; // Don't update if no username
 
     try {
-      await fetch(API_BASE_URL, {
+      await fetch(API_ENDPOINTS.todos(userName), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -186,7 +193,7 @@ function App() {
 
         // Sync with backend asynchronously (non-blocking)
         if (userName) {
-          fetch(API_BASE_URL, {
+          fetch(API_ENDPOINTS.addTodo(userName), {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -227,7 +234,7 @@ function App() {
 
     // Sync with backend asynchronously (non-blocking)
     if (userName) {
-      fetch(`${API_BASE_URL}/${index}`, {
+      fetch(API_ENDPOINTS.toggleTodo(userName, index), {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -249,7 +256,7 @@ function App() {
 
     // Sync with backend asynchronously (non-blocking)
     if (userName) {
-      fetch(`${API_BASE_URL}/${index}`, {
+      fetch(API_ENDPOINTS.deleteTodo(userName, index), {
         method: "DELETE",
       }).catch((error) => {
         console.error("Error syncing deletion with backend:", error);
@@ -265,30 +272,41 @@ function App() {
     setEditingIndex(index);
   }
 
-  function handleNameSubmit(name: string, password: string): void {
-    setUserName(name);
-    localStorage.setItem("userName", name);
-    localStorage.setItem("userPassword", password);
+  function handleAuthSuccess(
+    userName: string,
+    name: string,
+    token: string
+  ): void {
+    setUserName(userName);
+    setUserFullName(name);
+    setAuthToken(token);
+    localStorage.setItem("userName", userName);
+    localStorage.setItem("userFullName", name);
+    localStorage.setItem("authToken", token);
     setShowModal(false);
     setShowWelcome(true);
 
-    // Sync existing todos to backend with new username
-    if (todos.length > 0) {
-      const API_URL = `https://pingnotes.onrender.com/api/misc/todos/${name}`;
-      fetch(API_URL, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ todos }),
-      }).catch((error) => console.error("Error syncing todos:", error));
-    }
+    // Fetch todos after authentication
+    fetchTodos();
+  }
+
+  function handleLogout(): void {
+    setUserName("");
+    setUserFullName("");
+    setAuthToken("");
+    setTodos([]);
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userFullName");
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("todos");
+    setShowModal(true);
+    setShowWelcome(false);
   }
 
   return (
     <div className={darkMode ? "dark-mode" : ""}>
-      {showModal && <NameModal onSubmit={handleNameSubmit} />}
-      <Header userName={userName} showWelcome={showWelcome} />
+      {showModal && <AuthModal onAuthSuccess={handleAuthSuccess} />}
+      <Header userName={userFullName || userName} showWelcome={showWelcome} />
 
       <TodoInput
         todoValue={todoValue}

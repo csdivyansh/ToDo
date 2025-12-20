@@ -12,7 +12,9 @@ export default function Header({ userName, showWelcome }: HeaderProps) {
   useEffect(() => {
     if (!showWelcome || !userName) return;
 
-    const welcomeText = `Welcome ${userName}`;
+    // Extract first name from full name
+    const firstName = userName.trim().split(" ")[0];
+    const welcomeText = `Welcome ${firstName}`;
     const finalText = "ToDo List";
     let timers: number[] = [];
     let isCancelled = false;
