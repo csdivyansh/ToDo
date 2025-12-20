@@ -1,18 +1,22 @@
 {
   "version": 2,
-  "buildCommand": "cd backend && npm install && cd .. && npm install && npm run build",
-  "outputDirectory": "dist",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install",
-  "framework": "vite",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
   "rewrites": [
     {
-      "source": "/api/misc/:path*",
-      "destination": "/api/:path*"
+      "source": "/api/misc/(.*)",
+      "destination": "/api"
     }
   ],
   "functions": {
-    "api/**/*.js": {
+    "api/index.js": {
       "memory": 1024,
       "maxDuration": 10
     }

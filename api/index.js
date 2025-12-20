@@ -9,14 +9,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Routes
-app.use("/api/misc", todoRoutes);
+// Routes - mount at root since Vercel handles /api prefix
+app.use("/", todoRoutes);
 
-// MongoDB connection
+// MongoDB connection with caching
 let cachedDb = null;
 
 const connectDB = async () => {
-  if (cachedDb) {
+  if (cachedDb && mongoose.connection.readyState === 1) {
     return cachedDb;
   }
 
@@ -33,6 +33,14 @@ const connectDB = async () => {
 
 // Serverless function handler
 export default async function handler(req, res) {
-  await connectDB();
-  return app(req, res);
+  try {
+    await connectDB();
+    return app(req, res);
+  } catch (error) {
+    console.error("Handler error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
 }
