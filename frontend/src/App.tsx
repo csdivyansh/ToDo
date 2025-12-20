@@ -48,7 +48,9 @@ function App() {
     if (!userName) return; // Don't fetch if no username
 
     try {
-      const response = await fetch(API_ENDPOINTS.todos(userName));
+      const response = await fetch(API_ENDPOINTS.todos(userName), {
+        credentials: "include",
+      });
       if (response.ok) {
         const data = await response.json();
         if (data.todos && Array.isArray(data.todos) && data.todos.length > 0) {
@@ -108,6 +110,7 @@ function App() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({ todos: newList }),
       });
     } catch (error) {
@@ -198,6 +201,7 @@ function App() {
             headers: {
               "Content-Type": "application/json",
             },
+            credentials: "include",
             body: JSON.stringify(newTodoItem),
           })
             .then((response) => {
@@ -239,6 +243,7 @@ function App() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
       }).catch((error) => {
         console.error("Error syncing toggle with backend:", error);
         // Local update already done, so user isn't affected
@@ -258,6 +263,7 @@ function App() {
     if (userName) {
       fetch(API_ENDPOINTS.deleteTodo(userName, index), {
         method: "DELETE",
+        credentials: "include",
       }).catch((error) => {
         console.error("Error syncing deletion with backend:", error);
         // Local update already done, so user isn't affected
@@ -289,7 +295,9 @@ function App() {
     // Fetch todos after authentication with the username directly
     const fetchUserTodos = async () => {
       try {
-        const response = await fetch(API_ENDPOINTS.todos(userName));
+        const response = await fetch(API_ENDPOINTS.todos(userName), {
+          credentials: "include",
+        });
         if (response.ok) {
           const data = await response.json();
           if (

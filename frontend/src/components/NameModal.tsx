@@ -23,7 +23,10 @@ function NameModal({ onSubmit }: NameModalProps) {
 
     try {
       const response = await fetch(
-        API_ENDPOINTS.checkUsername(username.trim())
+        API_ENDPOINTS.checkUsername(username.trim()),
+        {
+          credentials: "include",
+        }
       );
       const data = await response.json();
 

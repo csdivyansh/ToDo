@@ -29,7 +29,10 @@ function AuthModal({ onAuthSuccess }: AuthModalProps) {
 
     try {
       const response = await fetch(
-        API_ENDPOINTS.checkUsername(username.trim())
+        API_ENDPOINTS.checkUsername(username.trim()),
+        {
+          credentials: "include",
+        }
       );
       const data = await response.json();
 
@@ -140,6 +143,7 @@ function AuthModal({ onAuthSuccess }: AuthModalProps) {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(body),
       });
 
