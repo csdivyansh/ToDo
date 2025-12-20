@@ -1,10 +1,12 @@
+/// <reference types="vite/client" />
+
 // API Configuration
 const isDevelopment = import.meta.env.DEV;
 
-// For Vercel deployment, backend is on separate domain
+// For Vercel deployment, API is on same domain via serverless function
 export const API_BASE_URL = isDevelopment
   ? "http://localhost:5000/api"
-  : "https://todov.vercel.app/api";
+  : "/api";
 
 export const API_ENDPOINTS = {
   // Auth endpoints
