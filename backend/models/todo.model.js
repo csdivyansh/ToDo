@@ -27,7 +27,11 @@ const todoSchema = new mongoose.Schema(
       default: Date.now,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    bufferCommands: false,
+    autoCreate: false,
+  }
 );
 
 const Todo = mongoose.model("Todo", todoSchema);
