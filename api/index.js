@@ -56,33 +56,63 @@ app.use((req, res) => {
 
 // MongoDB connection with caching
 let cachedDb = null;
+let isConnecting = false;
 
 const connectDB = async () => {
-  if (cachedDb && mongoose.connection.readyState === 1) {
-    return cachedDb;
+  // If already connected, return immediately
+  if (mongoose.connection.readyState === 1) {
+    return mongoose.connection;
   }
 
-  // Disable buffering for serverless
-  mongoose.set("bufferCommands", false);
+  // If currently connecting, wait for it
+  if (isConnecting) {
+    await new Promise((resolve) => {
+      const checkConnection = setInterval(() => {
+        if (
+          mongoose.connection.readyState === 1 ||
+          mongoose.connection.readyState === 0
+        ) {
+          clearInterval(checkConnection);
+          resolve();
+        }
+      }, 100);
+    });
+    if (mongoose.connection.readyState === 1) {
+      return mongoose.connection;
+    }
+  }
+
+  isConnecting = true;
 
   try {
-    const db = await mongoose.connect(process.env.MONGODB_URI, {
-      serverSelectionTimeoutMS: 5000,
-      socketTimeoutMS: 45000,
-      bufferCommands: false,
-    });
-    cachedDb = db;
-
-    // Wait for connection to be fully ready
-    if (mongoose.connection.readyState !== 1) {
-      throw new Error("MongoDB connection not ready");
+    // Disconnect any existing connection first
+    if (mongoose.connection.readyState !== 0) {
+      await mongoose.disconnect();
     }
 
-    console.log("MongoDB connected successfully");
-    return db;
+    console.log("Initiating MongoDB connection...");
+
+    await mongoose.connect(process.env.MONGODB_URI, {
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 45000,
+    });
+
+    // Verify connection is ready
+    if (mongoose.connection.readyState !== 1) {
+      throw new Error("MongoDB connection not ready after connect");
+    }
+
+    console.log(
+      "MongoDB connected successfully. State:",
+      mongoose.connection.readyState
+    );
+    cachedDb = mongoose.connection;
+    isConnecting = false;
+    return cachedDb;
   } catch (error) {
+    isConnecting = false;
+    cachedDb = null;
     console.error("MongoDB connection error:", error);
-    cachedDb = null; // Reset cache on error
     throw error;
   }
 };
@@ -116,10 +146,13 @@ export default async function handler(req, res) {
   try {
     // Check if MongoDB URI is set
     if (!process.env.MONGODB_URI) {
+      console.error("MONGODB_URI environment variable is not set");
       throw new Error("MONGODB_URI environment variable is not set");
     }
 
+    console.log("Attempting to connect to MongoDB...");
     await connectDB();
+    console.log("MongoDB connection state:", mongoose.connection.readyState);
 
     // Strip /api prefix if present for Express routing
     if (req.url.startsWith("/api")) {
@@ -133,12 +166,13 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error("Handler error:", error);
     console.error("Error stack:", error.stack);
+    console.error("MongoDB URI exists:", !!process.env.MONGODB_URI);
+    console.error("MongoDB connection state:", mongoose.connection.readyState);
     res.setHeader("Content-Type", "application/json");
     return res.status(500).json({
       success: false,
       message: "Internal server error",
       error: error.message,
-      error: process.env.NODE_ENV === "development" ? error.message : undefined,
     });
   }
 }
