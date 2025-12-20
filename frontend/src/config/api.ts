@@ -1,11 +1,10 @@
 // API Configuration
 const isDevelopment = import.meta.env.DEV;
-const isProduction = import.meta.env.PROD;
 
-// For Vercel deployment, use relative path in production
+// For Vercel deployment, backend is on separate domain
 export const API_BASE_URL = isDevelopment
   ? "http://localhost:5000/api"
-  : "/api";
+  : "https://todov.vercel.app/api";
 
 export const API_ENDPOINTS = {
   // Auth endpoints
