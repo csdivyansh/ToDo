@@ -286,8 +286,26 @@ function App() {
     setShowModal(false);
     setShowWelcome(true);
 
-    // Fetch todos after authentication
-    fetchTodos();
+    // Fetch todos after authentication with the username directly
+    const fetchUserTodos = async () => {
+      try {
+        const response = await fetch(API_ENDPOINTS.todos(userName));
+        if (response.ok) {
+          const data = await response.json();
+          if (
+            data.todos &&
+            Array.isArray(data.todos) &&
+            data.todos.length > 0
+          ) {
+            setTodos(data.todos);
+            persistData(data.todos);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching todos:", error);
+      }
+    };
+    fetchUserTodos();
   }
 
   function handleLogout(): void {
