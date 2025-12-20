@@ -9,8 +9,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Routes - mount at root since Vercel handles /api prefix
-app.use("/", todoRoutes);
+// Routes - mount with /misc prefix to match frontend calls
+app.use("/misc", todoRoutes);
 
 // MongoDB connection with caching
 let cachedDb = null;
