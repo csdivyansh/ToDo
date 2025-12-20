@@ -5,8 +5,20 @@ import todoRoutes from "../backend/routes/todo.routes.js";
 
 const app = express();
 
+// CORS configuration
+const corsOptions = {
+  origin: [
+    "https://todo.csdiv.tech",
+    "http://localhost:5173",
+    "http://localhost:5000",
+  ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Error handling middleware for JSON parsing errors
@@ -52,8 +64,19 @@ const connectDB = async () => {
 
 // Serverless function handler
 export default async function handler(req, res) {
-  // Set CORS headers
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  // Set CORS headers explicitly for Vercel
+  const origin = req.headers.origin;
+  const allowedOrigins = [
+    "https://todo.csdiv.tech",
+    "http://localhost:5173",
+    "http://localhost:5000",
+  ];
+
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+
+  res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET, POST, PUT, DELETE, PATCH, OPTIONS"
