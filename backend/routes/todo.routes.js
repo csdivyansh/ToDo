@@ -1,4 +1,5 @@
 import express from "express";
+import mongoose from "mongoose";
 import {
   getTodos,
   updateTodos,
@@ -14,6 +15,24 @@ import {
 } from "../controllers/auth/auth.controller.js";
 
 const router = express.Router();
+
+// Health check endpoint
+router.get("/health", (req, res) => {
+  const mongoStatus = mongoose.connection.readyState;
+  const statusMap = {
+    0: "disconnected",
+    1: "connected",
+    2: "connecting",
+    3: "disconnecting",
+  };
+
+  res.json({
+    success: true,
+    status: "API is running",
+    mongodb: statusMap[mongoStatus] || "unknown",
+    timestamp: new Date().toISOString(),
+  });
+});
 
 // Auth routes
 router.post("/auth/signup", signup);
