@@ -9,6 +9,7 @@ const app = express();
 const corsOptions = {
   origin: [
     "https://todo.csdiv.tech",
+    "https://todov.vercel.app",
     "http://localhost:5173",
     "http://localhost:5000",
   ],
@@ -123,6 +124,7 @@ export default async function handler(req, res) {
   const origin = req.headers.origin;
   const allowedOrigins = [
     "https://todo.csdiv.tech",
+    "https://todov.vercel.app",
     "http://localhost:5173",
     "http://localhost:5000",
   ];
