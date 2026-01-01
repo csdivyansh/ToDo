@@ -5,14 +5,21 @@ import todoRoutes from "../backend/routes/todo.routes.js";
 
 const app = express();
 
-// CORS configuration
+// CORS configuration (origins configurable via CORS_ORIGINS env, comma-separated)
+const defaultOrigins = [
+  "https://todo.csdiv.tech",
+  "https://todov.vercel.app",
+  "http://localhost:5173",
+  "http://localhost:5000",
+];
+
+const allowedOrigins = (process.env.CORS_ORIGINS || "")
+  .split(",")
+  .map((o) => o.trim())
+  .filter(Boolean);
+
 const corsOptions = {
-  origin: [
-    "https://todo.csdiv.tech",
-    "https://todov.vercel.app",
-    "http://localhost:5173",
-    "http://localhost:5000",
-  ],
+  origin: allowedOrigins.length ? allowedOrigins : defaultOrigins,
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -122,14 +129,8 @@ const connectDB = async () => {
 export default async function handler(req, res) {
   // Set CORS headers explicitly for Vercel
   const origin = req.headers.origin;
-  const allowedOrigins = [
-    "https://todo.csdiv.tech",
-    "https://todov.vercel.app",
-    "http://localhost:5173",
-    "http://localhost:5000",
-  ];
 
-  if (allowedOrigins.includes(origin)) {
+  if (corsOptions.origin.includes(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
   }
 

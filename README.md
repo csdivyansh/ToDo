@@ -128,6 +128,15 @@ MONGODB_URI=mongodb://localhost:27017/todoapp
 
 PORT=5000
 JWT_SECRET=your_super_secret_random_string_change_this
+# Optional: comma-separated list of allowed frontends for CORS
+# CORS_ORIGINS=https://your-frontend.com,http://localhost:5173
+```
+
+For the frontend, add a `.env` or `.env.production` (depending on your host) in `frontend/`:
+
+```env
+# Point the SPA at your deployed API
+VITE_API_BASE_URL=https://your-backend.example.com/api
 ```
 
 ## 📁 Project Structure

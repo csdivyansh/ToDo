@@ -1,10 +1,13 @@
 /// <reference types="vite/client" />
 
-// API Configuration
+// API base URL can be overridden at build time via VITE_API_BASE_URL
 const isDevelopment = import.meta.env.DEV;
+const envApiBase = import.meta.env.VITE_API_BASE_URL as string | undefined;
 
-// For Vercel deployment, API is on same domain via serverless function
-export const API_BASE_URL = isDevelopment
+// Prefer explicit env override, otherwise default to dev/prod sensible values
+export const API_BASE_URL = envApiBase
+  ? envApiBase.replace(/\/$/, "") // trim trailing slash
+  : isDevelopment
   ? "http://localhost:5000/api"
   : "/api";
 
