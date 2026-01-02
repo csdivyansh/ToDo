@@ -29,8 +29,6 @@ const todoSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-    bufferCommands: false,
-    autoCreate: false,
   }
 );
 
