@@ -308,8 +308,18 @@ footer {
   border-radius: 20px;
   max-width: 450px;
   width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
   animation: modalSlideIn 0.3s ease-out;
+}
+
+@media (max-width: 600px) {
+  .modal-content {
+    padding: 1.5rem;
+    width: 95%;
+    max-height: 95vh;
+  }
 }
 
 @keyframes modalSlideIn {
@@ -380,4 +390,19 @@ footer {
   color: #999;
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+@keyframes celebrate {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
 }

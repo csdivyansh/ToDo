@@ -191,14 +191,20 @@ function AuthModal({ onAuthSuccess }: AuthModalProps) {
         <form onSubmit={handleSubmit}>
           {mode === "signup" ? (
             <div
-              style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}
+              style={{
+                display: "flex",
+                gap: "10px",
+                alignItems: "flex-start",
+                flexWrap: "nowrap",
+              }}
             >
-              <div style={{ position: "relative", flex: 1 }}>
+              <div style={{ position: "relative", flex: 1, minWidth: 0 }}>
                 <input
                   type="text"
                   name="username"
                   value={userName}
                   onChange={handleUserNameChange}
+                  onBlur={handleBlur}
                   placeholder="Username"
                   autoFocus
                   maxLength={20}
@@ -215,6 +221,7 @@ function AuthModal({ onAuthSuccess }: AuthModalProps) {
                       mode === "signup" && (isChecking || isAvailable !== null)
                         ? "40px"
                         : "",
+                    width: "100%",
                   }}
                 />
                 {mode === "signup" && isChecking && (
@@ -287,6 +294,8 @@ function AuthModal({ onAuthSuccess }: AuthModalProps) {
                       ? 1
                       : 0.5,
                   minWidth: "fit-content",
+                  flexShrink: 0,
+                  whiteSpace: "nowrap",
                 }}
                 onMouseEnter={(e) => {
                   if (
