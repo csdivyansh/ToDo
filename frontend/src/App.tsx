@@ -353,7 +353,7 @@ function App() {
           onMouseEnter={(e) => (e.currentTarget.style.background = "#3d3d3d")}
           onMouseLeave={(e) => (e.currentTarget.style.background = "#2d2d2d")}
         >
-          Logout
+          ➜
         </button>
       )}
       <Header userName={userFullName || userName} showWelcome={showWelcome} />
