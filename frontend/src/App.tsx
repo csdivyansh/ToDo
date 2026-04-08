@@ -36,8 +36,9 @@ function App() {
     const saved = localStorage.getItem("authToken");
     return !!saved; // Show welcome animation if authenticated
   });
-  // Dark mode is now always enabled
-  const darkMode = true;
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  });
 
   function persistData(newList: Todo[]): void {
     localStorage.setItem("todos", JSON.stringify({ todos: newList }));
@@ -156,12 +157,31 @@ function App() {
   }, [userName]); // Re-run when userName changes
 
   useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleThemeChange = (event: MediaQueryListEvent) => {
+      setDarkMode(event.matches);
+    };
+
+    mediaQuery.addEventListener("change", handleThemeChange);
+
+    return () => {
+      mediaQuery.removeEventListener("change", handleThemeChange);
+    };
+  }, []);
+
+  useEffect(() => {
     const root = document.getElementById("root");
     if (root) {
       if (darkMode) {
         root.classList.add("dark-mode");
+        root.classList.remove("light-mode");
+        document.body.classList.add("dark-mode");
+        document.body.classList.remove("light-mode");
       } else {
         root.classList.remove("dark-mode");
+        root.classList.add("light-mode");
+        document.body.classList.remove("dark-mode");
+        document.body.classList.add("light-mode");
       }
     }
   }, [darkMode]);
@@ -330,7 +350,7 @@ function App() {
   }
 
   return (
-    <div className={darkMode ? "dark-mode" : ""}>
+    <div className={darkMode ? "dark-mode" : "light-mode"}>
       {showModal && <AuthModal onAuthSuccess={handleAuthSuccess} />}
       {userName && (
         <button
@@ -340,18 +360,22 @@ function App() {
             top: "20px",
             right: "20px",
             borderRadius: "14px",
-            background: "#2d2d2d",
-            color: "#e8d9c9",
+            background: darkMode ? "#2d2d2d" : "#ffffff",
+            color: darkMode ? "#e8d9c9" : "#1e293b",
             padding: "14px 18px",
-            border: "1px solid #444",
+            border: darkMode ? "1px solid #444" : "1px solid #cbd5e1",
             outline: "none",
             fontSize: "1.1rem",
             cursor: "pointer",
             transition: "background 200ms",
             zIndex: 1000,
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = "#3d3d3d")}
-          onMouseLeave={(e) => (e.currentTarget.style.background = "#2d2d2d")}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.background = darkMode ? "#3d3d3d" : "#f8fafc")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.background = darkMode ? "#2d2d2d" : "#ffffff")
+          }
         >
           ➜
         </button>
