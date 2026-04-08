@@ -13,6 +13,7 @@ interface Todo {
 
 function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [isLoadingTodos, setIsLoadingTodos] = useState<boolean>(true);
   const [todoValue, setTodoValue] = useState<string>("");
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editingIndex, setEditingIndex] = useState<number>(-1);
@@ -121,36 +122,41 @@ function App() {
 
   useEffect(() => {
     const loadTodos = async () => {
-      if (userName) {
-        // Only fetch todos if username exists
-        await fetchTodos();
-      } else {
-        // Load from localStorage if no username yet
-        loadLocalTodos();
-      }
+      setIsLoadingTodos(true);
+      try {
+        if (userName) {
+          // Only fetch todos if username exists
+          await fetchTodos();
+        } else {
+          // Load from localStorage if no username yet
+          loadLocalTodos();
+        }
 
-      // Handle daily reset after todos are loaded
-      const today = new Date().toDateString();
-      const lastOpen = localStorage.getItem("lastOpenDate");
+        // Handle daily reset after todos are loaded
+        const today = new Date().toDateString();
+        const lastOpen = localStorage.getItem("lastOpenDate");
 
-      if (lastOpen && lastOpen !== today) {
-        setTodos((prevTodos) => {
-          if (prevTodos.length > 0) {
-            const updatedTodos = prevTodos.map((todo) => ({
-              ...todo,
-              completed: false,
-            }));
-            persistData(updatedTodos);
-            if (userName) {
-              updateTodosOnBackend(updatedTodos);
+        if (lastOpen && lastOpen !== today) {
+          setTodos((prevTodos) => {
+            if (prevTodos.length > 0) {
+              const updatedTodos = prevTodos.map((todo) => ({
+                ...todo,
+                completed: false,
+              }));
+              persistData(updatedTodos);
+              if (userName) {
+                updateTodosOnBackend(updatedTodos);
+              }
+              return updatedTodos;
             }
-            return updatedTodos;
-          }
-          return prevTodos;
-        });
-      }
+            return prevTodos;
+          });
+        }
 
-      localStorage.setItem("lastOpenDate", today);
+        localStorage.setItem("lastOpenDate", today);
+      } finally {
+        setIsLoadingTodos(false);
+      }
     };
 
     loadTodos();
@@ -301,7 +307,7 @@ function App() {
   function handleAuthSuccess(
     userName: string,
     name: string,
-    token: string
+    token: string,
   ): void {
     setUserName(userName);
     setUserFullName(name);
@@ -314,6 +320,7 @@ function App() {
 
     // Fetch todos after authentication with the username directly
     const fetchUserTodos = async () => {
+      setIsLoadingTodos(true);
       try {
         const response = await fetch(API_ENDPOINTS.todos(userName), {
           credentials: "include",
@@ -331,6 +338,8 @@ function App() {
         }
       } catch (error) {
         console.error("Error fetching todos:", error);
+      } finally {
+        setIsLoadingTodos(false);
       }
     };
     fetchUserTodos();
@@ -371,10 +380,14 @@ function App() {
             zIndex: 1000,
           }}
           onMouseEnter={(e) =>
-            (e.currentTarget.style.background = darkMode ? "#3d3d3d" : "#f8fafc")
+            (e.currentTarget.style.background = darkMode
+              ? "#3d3d3d"
+              : "#f8fafc")
           }
           onMouseLeave={(e) =>
-            (e.currentTarget.style.background = darkMode ? "#2d2d2d" : "#ffffff")
+            (e.currentTarget.style.background = darkMode
+              ? "#2d2d2d"
+              : "#ffffff")
           }
         >
           ➜
@@ -393,6 +406,7 @@ function App() {
         handleEditTodos={handleEditTodos}
         handleToggleComplete={handleToggleComplete}
         todos={todos}
+        loading={isLoadingTodos}
       />
       <Footer />
     </div>

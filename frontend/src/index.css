@@ -89,7 +89,9 @@ h1 {
   border: 1px solid #444;
   background: #2d2d2d;
   color: #e8d9c9;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 1.5px 4px rgba(0, 0, 0, 0.2);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    0 1.5px 4px rgba(0, 0, 0, 0.2);
 }
 
 .input-container button {
@@ -114,7 +116,9 @@ header input {
   font-size: x-large;
   outline: none;
   width: 100%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12), 0 1.5px 4px rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.12),
+    0 1.5px 4px rgba(0, 0, 0, 0.1);
 }
 header button {
   border-radius: 14px;
@@ -147,6 +151,38 @@ p {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+}
+
+.loading-shell {
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+  text-align: center;
+  padding-top: 1.5rem;
+}
+
+.simple-loader {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 0.8rem;
+  border: 3px solid rgba(148, 163, 184, 0.35);
+  border-top-color: #f59e0b;
+  border-radius: 50%;
+  animation: spin-loader 0.8s linear infinite;
+}
+
+.loading-title {
+  font-size: 1.1rem;
+  letter-spacing: 0.02em;
+}
+
+@keyframes spin-loader {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 .todoItem {
   display: flex;
@@ -358,6 +394,14 @@ body.light-mode,
 
 .light-mode .welcome-text {
   color: #b45309;
+}
+
+.light-mode .loading-title {
+  color: #0f172a;
+}
+
+.dark-mode .loading-title {
+  color: #f8e3bf;
 }
 
 /* Modal Styles */

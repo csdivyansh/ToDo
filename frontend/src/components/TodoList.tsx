@@ -95,7 +95,7 @@ export default function TodoList({
           y: p.y + p.vy,
           vy: p.vy + 0.1, // gravity
           life: p.life - 1 / maxFrames,
-        }))
+        })),
       );
 
       frame++;
@@ -106,8 +106,13 @@ export default function TodoList({
   };
   if (loading) {
     return (
-      <div className="main" style={{ textAlign: "center", padding: "2rem" }}>
-        <div className="loading-spinner">Loading...</div>
+      <div className="main loading-shell" aria-live="polite" aria-busy="true">
+        <div
+          className="simple-loader"
+          role="status"
+          aria-label="Loading todos"
+        />
+        <p className="loading-title">Loading todos...</p>
       </div>
     );
   }
