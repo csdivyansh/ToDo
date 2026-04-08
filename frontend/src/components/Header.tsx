@@ -6,95 +6,45 @@ interface HeaderProps {
 }
 
 export default function Header({ userName, showWelcome }: HeaderProps) {
-  const [displayText, setDisplayText] = useState<string>("ToDos List");
-  const [isTyping, setIsTyping] = useState<boolean>(false);
+  const [displayText, setDisplayText] = useState<string>("ToDo List");
+  const [isWelcomeText, setIsWelcomeText] = useState<boolean>(false);
+  const [animationKey, setAnimationKey] = useState<number>(0);
 
   useEffect(() => {
-    if (!showWelcome || !userName) return;
+    if (!showWelcome || !userName) {
+      setDisplayText("ToDo List");
+      setIsWelcomeText(false);
+      return;
+    }
 
     // Extract first name from full name
     const firstName = userName.trim().split(" ")[0];
-    const welcomeText = `Welcome ${firstName}`;
-    const finalText = "ToDo List";
-    let timers: number[] = [];
-    let isCancelled = false;
+    const welcomeText = `Welcome, ${firstName}`;
 
-    const schedule = (fn: () => void, delay: number) => {
-      const id = window.setTimeout(() => {
-        if (!isCancelled) fn();
-      }, delay);
-      timers.push(id);
-    };
+    setDisplayText(welcomeText);
+    setIsWelcomeText(true);
+    setAnimationKey((value) => value + 1);
 
-    const typeText = (text: string, speed = 60, onDone?: () => void) => {
-      setIsTyping(true);
-      let i = 0;
-      const step = () => {
-        if (i <= text.length) {
-          setDisplayText(text.slice(0, i));
-          i++;
-          schedule(step, speed);
-        } else if (onDone) {
-          onDone();
-        }
-      };
-      step();
-    };
-
-    const eraseText = (text: string, speed = 50, onDone?: () => void) => {
-      let i = text.length;
-      const step = () => {
-        if (i >= 0) {
-          setDisplayText(text.slice(0, i));
-          i--;
-          schedule(step, speed);
-        } else if (onDone) {
-          onDone();
-        }
-      };
-      step();
-    };
-
-    const runCycle = () => {
-      // Type welcome
-      typeText(welcomeText, 50, () => {
-        // Pause, then erase welcome
-        schedule(() => {
-          eraseText(welcomeText, 40, () => {
-            // Small pause, then type final title
-            schedule(() => {
-              typeText(finalText, 70, () => {
-                // Pause on final text, then loop again after 5s
-                schedule(() => {
-                  setIsTyping(false);
-                  runCycle();
-                }, 5000);
-              });
-            }, 200);
-          });
-        }, 900);
-      });
-    };
-
-    runCycle();
+    const transitionTimer = window.setTimeout(() => {
+      setDisplayText("ToDo List");
+      setIsWelcomeText(false);
+      setAnimationKey((value) => value + 1);
+    }, 1800);
 
     return () => {
-      isCancelled = true;
-      timers.forEach((id) => clearTimeout(id));
+      clearTimeout(transitionTimer);
     };
   }, [showWelcome, userName]);
 
   return (
     <header>
-      <h1 className={isTyping ? "typing" : ""}>
+      <h1 className="header-title">
         <span
-          style={{
-            color: displayText.startsWith("Welcome") ? "aqua" : "inherit",
-          }}
+          key={animationKey}
+          className={`header-text ${isWelcomeText ? "welcome-text" : ""}`}
         >
           {displayText}
         </span>
-        {isTyping && <span className="cursor">|</span>}
       </h1>
     </header>
   );
