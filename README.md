@@ -160,7 +160,6 @@ todo-app/
 ├── src/                    # Frontend source code
 │   ├── components/         # React components
 │   │   ├── AuthModal.tsx   # Login/Signup modal
-│   │   ├── Footer.tsx      # Footer component
 │   │   ├── Header.tsx      # Header with greeting
 │   │   ├── TodoCard.tsx    # Individual todo item
 │   │   ├── TodoInput.tsx   # Input for new todos

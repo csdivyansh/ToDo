@@ -1,5 +1,15 @@
 @import url("https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Patrick+Hand&display=swap");
 
+:root {
+  --wood-base: #6b4429;
+  --wood-dark: #55361f;
+  --wood-light: #845331;
+  --wood-glow: rgba(255, 238, 210, 0.12);
+  --paper-ivory: #f5ede0;
+  --paper-border: #d4c4ad;
+  --ink-dark: #2d2418;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -12,8 +22,16 @@
 
 html,
 body {
-  background: #1e1e1e;
-  color: #e8d9c9;
+  background:
+    repeating-linear-gradient(
+      92deg,
+      rgba(56, 34, 20, 0.32) 0px,
+      rgba(56, 34, 20, 0.32) 3px,
+      rgba(120, 77, 44, 0.2) 3px,
+      rgba(120, 77, 44, 0.2) 11px
+    ),
+    linear-gradient(135deg, #4b2e1a 0%, #6a4328 45%, #7b5030 100%);
+  color: #f6e8d0;
 }
 h1 {
   margin: 2rem 0;
@@ -50,8 +68,21 @@ h1 {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #1e1e1e;
-  color: #e8d9c9;
+  background:
+    radial-gradient(circle at 18% 14%, var(--wood-glow), transparent 36%),
+    radial-gradient(
+      circle at 84% 70%,
+      rgba(255, 236, 208, 0.08),
+      transparent 42%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(48, 28, 15, 0.18) 0px,
+      rgba(48, 28, 15, 0.18) 2px,
+      rgba(139, 92, 56, 0.08) 2px,
+      rgba(139, 92, 56, 0.08) 14px
+    );
+  color: #f6e8d0;
   gap: 14px;
 }
 header {
@@ -88,20 +119,20 @@ h1 {
   font-size: 1.1rem;
   outline: none;
   padding: 14px 18px;
-  border: 1px solid #444;
-  background: #2d2d2d;
-  color: #e8d9c9;
+  border: 1px solid var(--paper-border);
+  background: rgba(249, 239, 224, 0.92);
+  color: var(--ink-dark);
   box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.3),
-    0 1.5px 4px rgba(0, 0, 0, 0.2);
+    0 2px 8px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 .input-container button {
   border-radius: 14px;
-  background: #2d2d2d;
-  color: #e8d9c9;
+  background: linear-gradient(180deg, #fff3df 0%, #f2dfc1 100%);
+  color: #5f3b20;
   padding: 14px 18px;
-  border: 1px solid #444;
+  border: 1px solid #b99a76;
   outline: none;
   font-size: 1.1rem;
   cursor: pointer;
@@ -109,7 +140,7 @@ h1 {
 }
 
 .input-container button:hover {
-  background: #3d3d3d;
+  background: linear-gradient(180deg, #fff7ea 0%, #f5e6cc 100%);
 }
 
 header input {
@@ -134,11 +165,11 @@ header button:hover {
 header button,
 header input {
   padding: 14px 18px;
-  border: 1px solid #444;
+  border: 1px solid #b99a76;
   outline: none;
   font-size: x-large;
-  background: #2d2d2d;
-  color: #e8d9c9;
+  background: rgba(249, 239, 224, 0.92);
+  color: var(--ink-dark);
 }
 p {
   font-size: 0.9em;
@@ -311,19 +342,22 @@ p {
 .pencilButton {
   color: #8b5a2b !important;
 }
-footer {
-  width: 100%;
-  padding: 1rem;
-  font-weight: 600;
-  font-size: large;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  text-align: center;
-  background: #0d0d0d;
-  color: #e8d9c9;
-  border-top: 1px solid #444;
+
+@media (max-width: 639px) {
+  .todoPages.main {
+    width: 90%;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: visible;
+    align-items: stretch;
+  }
+
+  .todoPage {
+    min-width: 0;
+    width: 100%;
+  }
 }
+
 @media (min-width: 640px) {
   header {
     flex-direction: row;
@@ -376,33 +410,54 @@ footer {
 
 /* Dark Mode Styles */
 .dark-mode {
-  background: #1e1e1e;
-  color: #e8d9c9;
+  background:
+    repeating-linear-gradient(
+      92deg,
+      rgba(56, 34, 20, 0.32) 0px,
+      rgba(56, 34, 20, 0.32) 3px,
+      rgba(120, 77, 44, 0.2) 3px,
+      rgba(120, 77, 44, 0.2) 11px
+    ),
+    linear-gradient(135deg, #4b2e1a 0%, #6a4328 45%, #7b5030 100%);
+  color: #f6e8d0;
   min-height: 100vh;
 }
 
 .dark-mode,
 .dark-mode #root {
-  background: #1e1e1e;
+  background:
+    radial-gradient(circle at 18% 14%, var(--wood-glow), transparent 36%),
+    radial-gradient(
+      circle at 84% 70%,
+      rgba(255, 236, 208, 0.08),
+      transparent 42%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(48, 28, 15, 0.18) 0px,
+      rgba(48, 28, 15, 0.18) 2px,
+      rgba(139, 92, 56, 0.08) 2px,
+      rgba(139, 92, 56, 0.08) 14px
+    );
 }
 
 .dark-mode header input,
 .dark-mode header button {
-  background: #2d2d2d;
-  color: #e8d9c9;
-  border: 1px solid #444;
+  background: rgba(249, 239, 224, 0.94);
+  color: var(--ink-dark);
+  border: 1px solid var(--paper-border);
 }
 
 .dark-mode .input-container input,
 .dark-mode .input-container button {
-  background: #2d2d2d;
-  color: #e8d9c9;
-  border: 1px solid #444;
+  background: rgba(249, 239, 224, 0.94);
+  color: var(--ink-dark);
+  border: 1px solid var(--paper-border);
 }
 
 .dark-mode header button:hover,
 .dark-mode .input-container button:hover {
-  background: #3d3d3d;
+  background: #f8ecd8;
 }
 
 .dark-mode .todoItem {
@@ -429,11 +484,6 @@ footer {
   color: #4f4437;
 }
 
-.dark-mode footer {
-  background: #0d0d0d;
-  border-top: 1px solid #444;
-}
-
 .dark-mode-toggle {
   font-size: 1.5em;
   padding: 8px 12px !important;
@@ -445,21 +495,29 @@ footer {
 .light-mode,
 body.light-mode,
 .light-mode #root {
-  background: #f8fafc;
-  color: #0f172a;
+  background:
+    repeating-linear-gradient(
+      92deg,
+      rgba(102, 64, 36, 0.18) 0px,
+      rgba(102, 64, 36, 0.18) 3px,
+      rgba(169, 118, 74, 0.1) 3px,
+      rgba(169, 118, 74, 0.1) 11px
+    ),
+    linear-gradient(135deg, #c89d70 0%, #b98657 45%, #a87547 100%);
+  color: #2d1f14;
 }
 
 .light-mode header input,
 .light-mode header button,
 .light-mode .input-container input,
 .light-mode .input-container button {
-  background: #ffffff;
-  color: #0f172a;
-  border: 1px solid #cbd5e1;
+  background: rgba(255, 249, 239, 0.96);
+  color: #392919;
+  border: 1px solid #ccb28e;
 }
 
 .light-mode .input-container button:hover {
-  background: #f1f5f9;
+  background: #fff4e1;
 }
 
 .light-mode .todoItem {
@@ -482,12 +540,6 @@ body.light-mode,
   background: #fffdf8;
   border-color: #6d604d;
   color: #a7352f;
-}
-
-.light-mode footer {
-  background: #ffffff;
-  color: #0f172a;
-  border-top: 1px solid #cbd5e1;
 }
 
 .light-mode .modal-content {

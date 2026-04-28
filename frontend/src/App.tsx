@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import TodoInput from "./components/TodoInput";
 import TodoList from "./components/TodoList";
 import Header from "./components/Header";
-import Footer from "./components/Footer";
 import AuthModal from "./components/AuthModal";
 import { API_ENDPOINTS } from "./config/api";
 
@@ -390,10 +389,10 @@ function App() {
             top: "20px",
             right: "20px",
             borderRadius: "14px",
-            background: darkMode ? "#2d2d2d" : "#ffffff",
-            color: darkMode ? "#e8d9c9" : "#1e293b",
+            background: darkMode ? "#f2dfc2" : "#fff2dd",
+            color: darkMode ? "#5f3b20" : "#5f3b20",
             padding: "14px 18px",
-            border: darkMode ? "1px solid #444" : "1px solid #cbd5e1",
+            border: darkMode ? "1px solid #b08a62" : "1px solid #b9936b",
             outline: "none",
             fontSize: "1.1rem",
             cursor: "pointer",
@@ -402,13 +401,13 @@ function App() {
           }}
           onMouseEnter={(e) =>
             (e.currentTarget.style.background = darkMode
-              ? "#3d3d3d"
-              : "#f8fafc")
+              ? "#f7e7cf"
+              : "#fff7ea")
           }
           onMouseLeave={(e) =>
             (e.currentTarget.style.background = darkMode
-              ? "#2d2d2d"
-              : "#ffffff")
+              ? "#f2dfc2"
+              : "#fff2dd")
           }
         >
           ➜
@@ -430,7 +429,6 @@ function App() {
         todos={todos}
         loading={isLoadingTodos}
       />
-      <Footer />
     </div>
   );
 }
