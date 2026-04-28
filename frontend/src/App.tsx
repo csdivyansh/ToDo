@@ -386,15 +386,15 @@ function App() {
           onClick={handleLogout}
           style={{
             position: "fixed",
-            top: "20px",
+            bottom: "20px",
             right: "20px",
             borderRadius: "14px",
             background: darkMode ? "#f2dfc2" : "#fff2dd",
             color: darkMode ? "#5f3b20" : "#5f3b20",
-            padding: "14px 18px",
+            padding: "8px 12px",
             border: darkMode ? "1px solid #b08a62" : "1px solid #b9936b",
             outline: "none",
-            fontSize: "1.1rem",
+            fontSize: "0.9rem",
             cursor: "pointer",
             transition: "background 200ms",
             zIndex: 1000,
@@ -410,7 +410,20 @@ function App() {
               : "#fff2dd")
           }
         >
-          ➜
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
         </button>
       )}
       <Header userName={userFullName || userName} showWelcome={showWelcome} />
