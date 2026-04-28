@@ -218,14 +218,6 @@ p {
   gap: 0.4rem;
 }
 
-.pagePencil {
-  position: absolute;
-  top: 0.6rem;
-  right: 0.6rem;
-  font-size: 1.2rem;
-  filter: saturate(0.95);
-}
-
 .loading-shell {
   align-items: center;
   justify-content: center;
@@ -337,10 +329,6 @@ p {
 }
 .actionsContainer button:hover {
   opacity: 0.7;
-}
-
-.pencilButton {
-  color: #8b5a2b !important;
 }
 
 @media (max-width: 639px) {

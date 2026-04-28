@@ -224,9 +224,6 @@ export default function TodoList({
             className="todoPage"
             aria-label={`Todo page ${page.pageIndex + 1}`}
           >
-            <span className="pagePencil" aria-hidden="true">
-              ✏️
-            </span>
             <ul>
               {page.todos.map((todo, offsetIndex) => {
                 const index = page.start + offsetIndex;
