@@ -26,7 +26,7 @@ body {
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  color: #f6e8d0;
+  color: #2d1f14;
 }
 h1 {
   margin: 2rem 0;
@@ -44,7 +44,7 @@ h1 {
 }
 
 .welcome-text {
-  color: #f59e0b;
+  color: #d97706;
 }
 
 @keyframes title-reveal {
@@ -67,7 +67,7 @@ h1 {
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  color: #f6e8d0;
+  color: #2d1f14;
   gap: 14px;
 }
 header {
@@ -104,28 +104,33 @@ h1 {
   font-size: 1.1rem;
   outline: none;
   padding: 14px 18px;
-  border: 1px solid var(--paper-border);
-  background: rgba(249, 239, 224, 0.92);
-  color: var(--ink-dark);
+  border: 2px solid #8b5a3c;
+  background: rgba(255, 252, 247, 0.98);
+  color: #1a110a;
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.22),
     inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
+.input-container input::placeholder {
+  color: #7a5d47;
+}
+
 .input-container button {
   border-radius: 14px;
-  background: linear-gradient(180deg, #fff3df 0%, #f2dfc1 100%);
-  color: #5f3b20;
+  background: linear-gradient(180deg, #8b5a2b 0%, #6d4623 100%);
+  color: #fffbf0;
   padding: 14px 18px;
-  border: 1px solid #b99a76;
+  border: 1px solid #5a3618;
   outline: none;
   font-size: 1.1rem;
   cursor: pointer;
   transition-duration: 200ms;
+  font-weight: 700;
 }
 
 .input-container button:hover {
-  background: linear-gradient(180deg, #fff7ea 0%, #f5e6cc 100%);
+  background: linear-gradient(180deg, #a0671f 0%, #7d542b 100%);
 }
 
 header input {
@@ -150,11 +155,11 @@ header button:hover {
 header button,
 header input {
   padding: 14px 18px;
-  border: 1px solid #b99a76;
+  border: 2px solid #8b5a3c;
   outline: none;
   font-size: x-large;
-  background: rgba(249, 239, 224, 0.92);
-  color: var(--ink-dark);
+  background: rgba(255, 252, 247, 0.98);
+  color: #1a110a;
 }
 p {
   font-size: 0.9em;
@@ -401,21 +406,22 @@ p {
 
 .dark-mode header input,
 .dark-mode header button {
-  background: rgba(249, 239, 224, 0.94);
-  color: var(--ink-dark);
-  border: 1px solid var(--paper-border);
+  background: rgba(255, 252, 247, 0.98);
+  color: #1a110a;
+  border: 2px solid #8b5a3c;
 }
 
 .dark-mode .input-container input,
 .dark-mode .input-container button {
-  background: rgba(249, 239, 224, 0.94);
-  color: var(--ink-dark);
-  border: 1px solid var(--paper-border);
+  background: rgba(255, 252, 247, 0.98);
+  color: #1a110a;
+  border: 2px solid #8b5a3c;
 }
 
 .dark-mode header button:hover,
 .dark-mode .input-container button:hover {
-  background: #f8ecd8;
+  background: linear-gradient(180deg, #a0671f 0%, #7d542b 100%);
+  color: #fffbf0;
 }
 
 .dark-mode .todoItem {
@@ -461,7 +467,8 @@ body.light-mode,
 }
 
 .light-mode .input-container button:hover {
-  background: #fff4e1;
+  background: linear-gradient(180deg, #a0671f 0%, #7d542b 100%);
+  color: #fffbf0;
 }
 
 .light-mode .todoItem {
@@ -516,11 +523,11 @@ body.light-mode,
 }
 
 .light-mode .loading-title {
-  color: #0f172a;
+  color: #1a110a;
 }
 
 .dark-mode .loading-title {
-  color: #f8e3bf;
+  color: #1a110a;
 }
 
 /* Modal Styles */
