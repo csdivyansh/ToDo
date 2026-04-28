@@ -22,15 +22,10 @@
 
 html,
 body {
-  background:
-    repeating-linear-gradient(
-      92deg,
-      rgba(56, 34, 20, 0.32) 0px,
-      rgba(56, 34, 20, 0.32) 3px,
-      rgba(120, 77, 44, 0.2) 3px,
-      rgba(120, 77, 44, 0.2) 11px
-    ),
-    linear-gradient(135deg, #4b2e1a 0%, #6a4328 45%, #7b5030 100%);
+  background-image: url("/background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   color: #f6e8d0;
 }
 h1 {
@@ -68,20 +63,10 @@ h1 {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background:
-    radial-gradient(circle at 18% 14%, var(--wood-glow), transparent 36%),
-    radial-gradient(
-      circle at 84% 70%,
-      rgba(255, 236, 208, 0.08),
-      transparent 42%
-    ),
-    repeating-linear-gradient(
-      90deg,
-      rgba(48, 28, 15, 0.18) 0px,
-      rgba(48, 28, 15, 0.18) 2px,
-      rgba(139, 92, 56, 0.08) 2px,
-      rgba(139, 92, 56, 0.08) 14px
-    );
+  background-image: url("/background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   color: #f6e8d0;
   gap: 14px;
 }
@@ -398,35 +383,20 @@ p {
 
 /* Dark Mode Styles */
 .dark-mode {
-  background:
-    repeating-linear-gradient(
-      92deg,
-      rgba(56, 34, 20, 0.32) 0px,
-      rgba(56, 34, 20, 0.32) 3px,
-      rgba(120, 77, 44, 0.2) 3px,
-      rgba(120, 77, 44, 0.2) 11px
-    ),
-    linear-gradient(135deg, #4b2e1a 0%, #6a4328 45%, #7b5030 100%);
+  background-image: url("/background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   color: #f6e8d0;
   min-height: 100vh;
 }
 
 .dark-mode,
 .dark-mode #root {
-  background:
-    radial-gradient(circle at 18% 14%, var(--wood-glow), transparent 36%),
-    radial-gradient(
-      circle at 84% 70%,
-      rgba(255, 236, 208, 0.08),
-      transparent 42%
-    ),
-    repeating-linear-gradient(
-      90deg,
-      rgba(48, 28, 15, 0.18) 0px,
-      rgba(48, 28, 15, 0.18) 2px,
-      rgba(139, 92, 56, 0.08) 2px,
-      rgba(139, 92, 56, 0.08) 14px
-    );
+  background-image: url("/background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 .dark-mode header input,
@@ -483,25 +453,11 @@ p {
 .light-mode,
 body.light-mode,
 .light-mode #root {
-  background:
-    repeating-linear-gradient(
-      92deg,
-      rgba(102, 64, 36, 0.18) 0px,
-      rgba(102, 64, 36, 0.18) 3px,
-      rgba(169, 118, 74, 0.1) 3px,
-      rgba(169, 118, 74, 0.1) 11px
-    ),
-    linear-gradient(135deg, #c89d70 0%, #b98657 45%, #a87547 100%);
+  background-image: url("/background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   color: #2d1f14;
-}
-
-.light-mode header input,
-.light-mode header button,
-.light-mode .input-container input,
-.light-mode .input-container button {
-  background: rgba(255, 249, 239, 0.96);
-  color: #392919;
-  border: 1px solid #ccb28e;
 }
 
 .light-mode .input-container button:hover {
