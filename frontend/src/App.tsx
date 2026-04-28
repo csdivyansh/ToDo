@@ -297,6 +297,27 @@ function App() {
     }
   }
 
+  function handleReorderTodos(fromIndex: number, toIndex: number): void {
+    if (fromIndex === toIndex) return;
+
+    const reorderedTodos = [...todos];
+    const [movedTodo] = reorderedTodos.splice(fromIndex, 1);
+    reorderedTodos.splice(toIndex, 0, movedTodo);
+
+    persistData(reorderedTodos);
+    setTodos(reorderedTodos);
+
+    if (isEditing) {
+      setIsEditing(false);
+      setEditingIndex(-1);
+      setTodoValue("");
+    }
+
+    if (userName) {
+      updateTodosOnBackend(reorderedTodos);
+    }
+  }
+
   function handleEditTodos(index: number): void {
     const valueToBeEdited = todos[index].text;
     setTodoValue(valueToBeEdited);
@@ -405,6 +426,7 @@ function App() {
         handleDeleteTodos={handleDeleteTodos}
         handleEditTodos={handleEditTodos}
         handleToggleComplete={handleToggleComplete}
+        handleReorderTodos={handleReorderTodos}
         todos={todos}
         loading={isLoadingTodos}
       />

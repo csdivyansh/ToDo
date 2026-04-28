@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { DragEvent, useEffect, useState } from "react";
 import TodoCard from "./TodoCard";
 
 interface Todo {
@@ -11,6 +11,7 @@ interface TodoListProps {
   handleDeleteTodos: (index: number) => void;
   handleEditTodos: (index: number) => void;
   handleToggleComplete: (index: number) => void;
+  handleReorderTodos: (fromIndex: number, toIndex: number) => void;
   loading?: boolean;
 }
 
@@ -28,10 +29,14 @@ export default function TodoList({
   handleDeleteTodos,
   handleEditTodos,
   handleToggleComplete,
+  handleReorderTodos,
   loading = false,
 }: TodoListProps) {
   const [showFireworks, setShowFireworks] = useState(false);
   const [particles, setParticles] = useState<Particle[]>([]);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  const todosPerPage = 5;
 
   useEffect(() => {
     const allCompleted =
@@ -104,6 +109,52 @@ export default function TodoList({
 
     requestAnimationFrame(animate);
   };
+
+  const handleDragStart = (index: number) => {
+    setDraggedIndex(index);
+  };
+
+  const handleDragOver = (event: DragEvent<HTMLLIElement>, index: number) => {
+    event.preventDefault();
+    if (dragOverIndex !== index) {
+      setDragOverIndex(index);
+    }
+  };
+
+  const handleDrop = (event: DragEvent<HTMLLIElement>, index: number) => {
+    event.preventDefault();
+
+    if (draggedIndex === null) {
+      setDragOverIndex(null);
+      return;
+    }
+
+    if (draggedIndex !== index) {
+      handleReorderTodos(draggedIndex, index);
+    }
+
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  };
+
+  const todoPages = Array.from(
+    { length: Math.max(1, Math.ceil(todos.length / todosPerPage)) },
+    (_unused, pageIndex) => {
+      const start = pageIndex * todosPerPage;
+      const end = start + todosPerPage;
+      return {
+        pageIndex,
+        todos: todos.slice(start, end),
+        start,
+      };
+    },
+  );
+
   if (loading) {
     return (
       <div className="main loading-shell" aria-live="polite" aria-busy="true">
@@ -166,18 +217,43 @@ export default function TodoList({
           </div>
         </div>
       )}
-      <ul className="main">
-        {todos.map((todo, index) => (
-          <TodoCard
-            key={index}
-            index={index}
-            todo={todo}
-            handleDeleteTodo={handleDeleteTodos}
-            handleEditTodo={handleEditTodos}
-            handleToggleComplete={handleToggleComplete}
-          />
+      <div className="todoPages main">
+        {todoPages.map((page) => (
+          <section
+            key={page.pageIndex}
+            className="todoPage"
+            aria-label={`Todo page ${page.pageIndex + 1}`}
+          >
+            <span className="pagePencil" aria-hidden="true">
+              ✏️
+            </span>
+            <ul>
+              {page.todos.map((todo, offsetIndex) => {
+                const index = page.start + offsetIndex;
+
+                return (
+                  <TodoCard
+                    key={index}
+                    index={index}
+                    todo={todo}
+                    isDragging={draggedIndex === index}
+                    isDragOver={
+                      dragOverIndex === index && draggedIndex !== index
+                    }
+                    onDragStart={() => handleDragStart(index)}
+                    onDragOver={(event) => handleDragOver(event, index)}
+                    onDrop={(event) => handleDrop(event, index)}
+                    onDragEnd={handleDragEnd}
+                    handleDeleteTodo={handleDeleteTodos}
+                    handleEditTodo={handleEditTodos}
+                    handleToggleComplete={handleToggleComplete}
+                  />
+                );
+              })}
+            </ul>
+          </section>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
