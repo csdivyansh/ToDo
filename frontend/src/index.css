@@ -190,73 +190,14 @@ p {
 .todoPage {
   min-width: 360px;
   width: 380px;
-  background:
-    radial-gradient(
-      circle at 14% 18%,
-      rgba(255, 255, 255, 0.7) 0 1px,
-      transparent 1px 100%
-    ),
-    radial-gradient(
-      circle at 78% 24%,
-      rgba(139, 94, 52, 0.08) 0 1.5px,
-      transparent 1.6px 100%
-    ),
-    radial-gradient(
-      circle at 32% 72%,
-      rgba(116, 78, 44, 0.06) 0 1.25px,
-      transparent 1.3px 100%
-    ),
-    repeating-linear-gradient(
-      12deg,
-      rgba(255, 248, 237, 0.92) 0,
-      rgba(255, 248, 237, 0.92) 6px,
-      rgba(242, 230, 212, 0.92) 6px,
-      rgba(242, 230, 212, 0.92) 12px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      rgba(120, 88, 58, 0.03) 0,
-      rgba(120, 88, 58, 0.03) 1px,
-      transparent 1px,
-      transparent 9px
-    ),
-    linear-gradient(180deg, #fbf3e7 0%, #f2e4d0 100%);
+  background: linear-gradient(180deg, #f8f1e6 0%, #f5ecdf 100%);
   border: 1px solid #d6c9b5;
   border-radius: 10px;
   padding: 1rem 0.9rem;
   position: relative;
-  overflow: hidden;
   box-shadow:
     0 8px 18px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.55);
-}
-
-.todoPage::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.12),
-      transparent 18%,
-      transparent 82%,
-      rgba(122, 84, 44, 0.08)
-    ),
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.22),
-      transparent 18%,
-      transparent 82%,
-      rgba(110, 77, 44, 0.05)
-    );
-  opacity: 0.7;
-  pointer-events: none;
-}
-
-.todoPage > * {
-  position: relative;
-  z-index: 1;
 }
 
 .todoPage ul {

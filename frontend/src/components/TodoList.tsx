@@ -217,40 +217,48 @@ export default function TodoList({
           </div>
         </div>
       )}
-      <div className="todoPages main">
-        {todoPages.map((page) => (
-          <section
-            key={page.pageIndex}
-            className="todoPage"
-            aria-label={`Todo page ${page.pageIndex + 1}`}
-          >
-            <ul>
-              {page.todos.map((todo, offsetIndex) => {
-                const index = page.start + offsetIndex;
+      {todos.length === 0 ? (
+        <div className="main">
+          <p style={{ textAlign: "center", fontSize: "3rem", color: "#000000" }}>
+            No tasks left!
+          </p>
+        </div>
+      ) : (
+        <div className="todoPages main">
+          {todoPages.map((page) => (
+            <section
+              key={page.pageIndex}
+              className="todoPage"
+              aria-label={`Todo page ${page.pageIndex + 1}`}
+            >
+              <ul>
+                {page.todos.map((todo, offsetIndex) => {
+                  const index = page.start + offsetIndex;
 
-                return (
-                  <TodoCard
-                    key={index}
-                    index={index}
-                    todo={todo}
-                    isDragging={draggedIndex === index}
-                    isDragOver={
-                      dragOverIndex === index && draggedIndex !== index
-                    }
-                    onDragStart={() => handleDragStart(index)}
-                    onDragOver={(event) => handleDragOver(event, index)}
-                    onDrop={(event) => handleDrop(event, index)}
-                    onDragEnd={handleDragEnd}
-                    handleDeleteTodo={handleDeleteTodos}
-                    handleEditTodo={handleEditTodos}
-                    handleToggleComplete={handleToggleComplete}
-                  />
-                );
-              })}
-            </ul>
-          </section>
-        ))}
-      </div>
+                  return (
+                    <TodoCard
+                      key={index}
+                      index={index}
+                      todo={todo}
+                      isDragging={draggedIndex === index}
+                      isDragOver={
+                        dragOverIndex === index && draggedIndex !== index
+                      }
+                      onDragStart={() => handleDragStart(index)}
+                      onDragOver={(event) => handleDragOver(event, index)}
+                      onDrop={(event) => handleDrop(event, index)}
+                      onDragEnd={handleDragEnd}
+                      handleDeleteTodo={handleDeleteTodos}
+                      handleEditTodo={handleEditTodos}
+                      handleToggleComplete={handleToggleComplete}
+                    />
+                  );
+                })}
+              </ul>
+            </section>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
