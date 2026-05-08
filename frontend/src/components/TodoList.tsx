@@ -36,6 +36,9 @@ export default function TodoList({
   const [particles, setParticles] = useState<Particle[]>([]);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  const [quote, setQuote] = useState<{ text: string; author: string } | null>(
+    null,
+  );
   const todosPerPage = 5;
 
   useEffect(() => {
@@ -45,8 +48,6 @@ export default function TodoList({
     if (allCompleted && !showFireworks) {
       setShowFireworks(true);
       createFireworks();
-
-      // Reset after animation
       setTimeout(() => {
         setShowFireworks(false);
         setParticles([]);
@@ -56,6 +57,29 @@ export default function TodoList({
       setParticles([]);
     }
   }, [todos]);
+
+  useEffect(() => {
+    if (todos.length === 0) {
+      fetchQuote();
+    }
+  }, [todos.length]);
+
+  const fetchQuote = async () => {
+    try {
+      const response = await fetch("https://api.quotable.io/random");
+      const data = await response.json();
+      setQuote({
+        text: data.content,
+        author: data.author,
+      });
+    } catch (error) {
+      console.error("Failed to fetch quote:", error);
+      setQuote({
+        text: "The journey of a thousand miles begins with a single step.",
+        author: "Lao Tzu",
+      });
+    }
+  };
 
   const createFireworks = () => {
     const colors = [
@@ -219,17 +243,52 @@ export default function TodoList({
       )}
       {todos.length === 0 ? (
         <div className="main">
-          <p style={{ textAlign: "center", fontSize: "3rem", color: "#000000" }}>
-            No tasks left!
-          </p>
+          <div
+            style={{
+              textAlign: "center",
+              padding: "2rem",
+              maxWidth: "600px",
+              margin: "0 auto",
+            }}
+          >
+            <p
+              style={{
+                fontSize: "1.3rem",
+                fontStyle: "italic",
+                color: "#000000",
+                marginBottom: "1rem",
+                lineHeight: "1.6",
+              }}
+            >
+              "{quote?.text}"
+            </p>
+            <p style={{ fontSize: "1rem", color: "#1f1a1a" }}>
+              — {quote?.author}
+            </p>
+          </div>
         </div>
       ) : (
-        <div className="todoPages main">
+        <div
+          className="todoPages main"
+          style={
+            todoPages.length <= 2
+              ? {
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "flex-start",
+                  paddingTop: "2rem",
+                  flexWrap: "wrap",
+                  gap: "2rem",
+                }
+              : {}
+          }
+        >
           {todoPages.map((page) => (
             <section
               key={page.pageIndex}
               className="todoPage"
               aria-label={`Todo page ${page.pageIndex + 1}`}
+              style={todoPages.length <= 2 ? { flex: "0 0 auto" } : {}}
             >
               <ul>
                 {page.todos.map((todo, offsetIndex) => {
